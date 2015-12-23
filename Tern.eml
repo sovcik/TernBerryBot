@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component inherit-compiler-output="true" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/out/test/Tern"/>
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<excludeFolder url="file://$MODULE_DIR$/.idea"/>
+		<excludeFolder url="file://$MODULE_DIR$/cpp"/>
+		<excludeFolder url="file://$MODULE_DIR$/docs"/>
+		<excludeFolder url="file://$MODULE_DIR$/logs"/>
+		<excludeFolder url="file://$MODULE_DIR$/nqc"/>
+		<excludeFolder url="file://$MODULE_DIR$/nsi"/>
+		<excludeFolder url="file://$MODULE_DIR$/nxc"/>
+	</contentEntry>
+</component>
