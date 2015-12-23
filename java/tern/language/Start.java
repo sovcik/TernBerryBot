@@ -67,15 +67,75 @@ public class Start extends PStatement implements StartStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      //for nqc
-    //  program.addInstruction("#include \"nqc/base.nqc\"");
-      
-      //for nxc
-      program.addInstruction("#include \"base.h\"");
-      program.addInstruction("");
-      program.addInstruction("task main() {");
-     // program.addInstruction("   Begin();");
+      addDefines(program);
+      program.addInstruction("vmthread main {");
       if (next != null) next.compile(program);
+      program.addInstruction("}");
+      program.addInstruction("");
+      addSubCalls(program);
+   }
+
+   private void addDefines(Program program){
+      program.addInstruction("define LAYER     0");
+      program.addInstruction("");
+      program.addInstruction("define MOTOR_BC  6");
+      program.addInstruction("");
+      program.addInstruction("define BRAKE_STOP  1");
+      program.addInstruction("define BRAKE_COAST 0");
+      program.addInstruction("");
+      program.addInstruction("define  MOTOR_LEFT   MOTOR_B");
+      program.addInstruction("define  MOTOR_RIGHT  MOTOR_C ");
+      program.addInstruction("define  MOTOR_BOTH   MOTOR_BC");
+      program.addInstruction("define  MOTOR_SPEED  30");
+      program.addInstruction("define  MOTOR_NEGATIVE_SPEED -30");
+      program.addInstruction("define  MOTOR_STEP	1000");
+      program.addInstruction("");
+   }
+
+   private void addSubCalls(Program program){
+      program.addInstruction("//-----------------------------------");
+      program.addInstruction("subcall Forward {");
+      program.addInstruction("   OUTPUT_TIME_SPEED(LAYER, MOTOR_BOTH, MOTOR_SPEED, 500, MOTOR_STEP, 500, BRAKE_STOP )");
+      program.addInstruction("   CALL (wait_for_motors)");
+      program.addInstruction("}");
+      program.addInstruction("");
+      program.addInstruction("//-----------------------------------");
+      program.addInstruction("subcall Backward {");
+      program.addInstruction("   OUTPUT_TIME_SPEED(LAYER, MOTOR_BOTH, MOTOR_NEGATIVE_SPEED, 500, MOTOR_STEP, 500, BRAKE_STOP )");
+      program.addInstruction("   CALL (wait_for_motors)");
+      program.addInstruction("}");
+
+      program.addInstruction("//-----------------------------------");
+      program.addInstruction("subcall Left {");
+      program.addInstruction("   OUTPUT_STEP_SPEED(LAYER, MOTOR_RIGHT, 25, 20, 140, 20, BRAKE_STOP)");
+      program.addInstruction("   OUTPUT_STEP_SPEED(LAYER, MOTOR_LEFT, -25, 20, 140, 20, BRAKE_STOP)");
+      program.addInstruction("   CALL (wait_for_motors)");
+      program.addInstruction("}");
+
+      program.addInstruction("//-----------------------------------");
+      program.addInstruction("subcall Right {");
+      program.addInstruction("   OUTPUT_STEP_SPEED(LAYER, MOTOR_RIGHT, -25, 20, 140, 20, BRAKE_STOP)");
+      program.addInstruction("   OUTPUT_STEP_SPEED(LAYER, MOTOR_LEFT,   25, 20, 140, 20, BRAKE_STOP)");
+      program.addInstruction("   CALL (wait_for_motors)");
+      program.addInstruction("}");
+
+      program.addInstruction("//-----------------------------------");
+      program.addInstruction("subcall beep {");
+      program.addInstruction("   SOUND(TONE,50,262,500)");
+      program.addInstruction("   SOUND_READY");
+      program.addInstruction("}");
+
+      program.addInstruction("//-----------------------------------");
+      program.addInstruction("subcall wait_for_motors {");
+      program.addInstruction("   DATA32 timer");
+      program.addInstruction("   DATA8	 yn");
+
+      program.addInstruction("   motor_running:");
+      program.addInstruction("   TIMER_WAIT(100,timer)");
+      program.addInstruction("   TIMER_READY(timer)");
+      program.addInstruction("   OUTPUT_TEST(LAYER, MOTOR_BOTH, yn)");
+
+      program.addInstruction("   JR_TRUE(yn, motor_running)");
       program.addInstruction("}");
    }
 

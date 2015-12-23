@@ -57,7 +57,7 @@ public class Right extends PStatement {
 	
 	public void compile(Program program) throws CompileException {
 		setDebugInfo(program);
-		program.addInstruction("   Right();");
+		program.addInstruction("   CALL(Right)");
 		if (this.next != null) next.compile(program);
 	}
 	

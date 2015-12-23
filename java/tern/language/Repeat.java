@@ -74,40 +74,74 @@ public class Repeat extends PStatement {
 	
 	
 	protected void compileEndRepeat(Program program) throws CompileException {
-		if (Repeat.NEST > 0) {
-			program.addInstruction("   }");
-			Repeat.NEST--;
-		}
-		if (this.next != null) next.compile(program);
+		//if (Repeat.NEST > 0) {
+		//	program.addInstruction("   }");
+		//	Repeat.NEST--;
+		//}
+		//if (this.next != null) next.compile(program);
+
+		// endRepeat does nothing, it only returns control to BeginRepeat
+		program.addInstruction("   // EndRepeat found");
+		if (Repeat.NEST > 0) { Repeat.NEST--; }
 	}
 	
 	
 	protected void compileBeginRepeat(Program program) throws CompileException {
-		
-		if (next != null && next instanceof Num) {
-			String var = "count" + VAR++;
-			int param = ((Num)next).getValue();
-			program.addInstruction("   int " + var + " = 0;");
-			program.addInstruction("   while (" + var + " < " + param + ") {");
-			program.addInstruction("      " + var + "++;");
-		}
-		else if (next != null && next instanceof Sensor) {
-			Sensor sen = (Sensor)next;
-                        String senType= sen.getType();
-                        program.addInstruction("   SetSensor"+senType+"(" +
-								   sen.getSensorID() + ");");
-                        program.addInstruction("   while (" + sen.getTest() + ") {");
-      		}
-		else {
-			program.addInstruction("   while (1) {");
-		}
+
+		// count depth of nested loops
 		int nest = NEST;
 		NEST++;
-		if (this.next != null) next.compile(program);
-		if (NEST > nest) { 
-			program.addInstruction("   }");
+
+		// each new loop is going to have unique label & counter
+		String var = "count" + VAR;
+		String loopLabel = "loop" + VAR;
+		VAR++;
+
+		if (next != null && next instanceof Num) {
+			int param = ((Num)next).getValue();
+
+			// initialize loop counter
+			program.addInstruction("   DATA32 " + var );
+			program.addInstruction("   MOVE32_32(0, " + var + ")");
+
+			// add loop label
+			program.addInstruction("   " + loopLabel + ":");
+
+			// compile symbols from inside loop
+			if (this.next != null) next.compile(program);
+
+			// evaluate loop condition
+			program.addInstruction("   ADD32(1, " + var + "," + var + ")");
+			program.addInstruction("   JR_LTE32(" + var + "," + param + "," + loopLabel + ")");
+		}
+		else if (next != null && next instanceof Sensor) {
+			// add loop label
+			program.addInstruction("   " + loopLabel + ":");
+			Sensor sen = (Sensor)next;
+			String senType= sen.getType();
+            program.addInstruction("   SetSensor"+senType+"(" + sen.getSensorID() + ");");
+			program.addInstruction("   while (" + sen.getTest() + ") {");
+		}
+		else {
+			// add loop label
+			program.addInstruction("   " + loopLabel + ":");
+
+			// compile symbols from inside loop
+			if (this.next != null) next.compile(program);
+
+			// evaluate loop condition
+			program.addInstruction("   JR(" + loopLabel + ")");  // loop forever
+		}
+
+		// if symbol EndRepeat is missing, then do nothing
+		if (NEST > nest) {
+			program.addInstruction("   // EndRepeat missing");
 			NEST--;
 		}
+
+		// compile remaining symbols
+		if (this.next != null) next.compile(program);
+
 	}
 	
 	

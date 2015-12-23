@@ -56,7 +56,7 @@ public class Backward extends PStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Backward();");
+      program.addInstruction("   CALL(Backward)");
       if (this.next != null) next.compile(program);
    }
 
