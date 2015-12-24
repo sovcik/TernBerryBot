@@ -56,7 +56,7 @@ public class Beep extends PStatement {
 	
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   CALL(Beep)");
+      program.addInstruction("CALL(Beep)");
       if (this.next != null) next.compile(program);
    }
 

@@ -69,8 +69,11 @@ public class Start extends PStatement implements StartStatement {
       setDebugInfo(program);
       addDefines(program);
       program.addInstruction("vmthread main {");
+      program.codeIndent();
       if (next != null) next.compile(program);
+      program.codeOutdent();
       program.addInstruction("}");
+
       program.addInstruction("");
       addSubCalls(program);
    }
