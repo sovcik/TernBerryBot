@@ -57,7 +57,7 @@ public class Wiggle extends PStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Wiggle();");
+      program.addInstruction("CALL(Wiggle)");
       if (this.next != null) next.compile(program);
    }
 

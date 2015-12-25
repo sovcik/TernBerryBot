@@ -56,7 +56,7 @@ public class Spin extends PStatement {
 	
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Spin();");
+      program.addInstruction("CALL(Spin)");
       if (this.next != null) next.compile(program);
    }
 

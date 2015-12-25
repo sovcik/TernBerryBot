@@ -2,7 +2,8 @@
  * @(#) Program.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +66,7 @@ public class Program {
 	/** Used to generate statement compile-time ID numbers */
 	public int COMPILE_ID = 0;
 
-    /** padding */
+    /** padding/indenting program code statements */
     public String pad = "";
 	
 	

@@ -57,7 +57,7 @@ public class Song extends PStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Sing();");
+      program.addInstruction("CALL(Sing)");
       if (this.next != null) next.compile(program);
    }
 

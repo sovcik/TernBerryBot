@@ -76,7 +76,7 @@ public class Stop extends PStatement {
 	
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Off(OUT_" + motor + ");");
+      program.addInstruction("Off(OUT_" + motor + ");");
       if (this.next != null) next.compile(program);
    }
 

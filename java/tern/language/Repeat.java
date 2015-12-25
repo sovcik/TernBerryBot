@@ -2,7 +2,8 @@
  * @(#) Repeat.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -136,12 +137,9 @@ public class Repeat extends PStatement {
 			// and indent code following the label
 			program.codeIndent();
 
-			//*** TODO - working with sensors is not finished yet
 			Sensor sen = (Sensor)next;
-			String senType = sen.getType();
+			a = sen.getTest(loopLabel);
 
-			a.add("SetSensor"+senType+"(" + sen.getSensorID() + ");");
-			a.add("while (" + sen.getTest() + ") {");
 			st.push(a);
 		}
 		else {

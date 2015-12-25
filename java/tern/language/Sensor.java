@@ -2,7 +2,8 @@
  * @(#) Sensor.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +25,8 @@ package tern.language;
 import tern.compiler.*;
 import topcodes.TopCode;
 
+import java.util.ArrayList;
+
 
 public class Sensor extends PStatement {
 	
@@ -31,10 +34,8 @@ public class Sensor extends PStatement {
 	public static final int RELEASE = 425;
 	public static final int LIGHT   = 453;
 	public static final int DARK    = 465;
-        public static final int OBJECT = 31;
-        public static final int SOUND = 47;
-         public static final int MUTE = 55;
-	
+	public static final int OBJECT = 31;
+
 	
 	public Sensor(TopCode top) {
 		super(top);
@@ -50,12 +51,8 @@ public class Sensor extends PStatement {
 			new Sensor(new TopCode(LIGHT)));
 		StatementFactory.registerStatementType(
 			new Sensor(new TopCode(DARK)));
-                StatementFactory.registerStatementType(
+		StatementFactory.registerStatementType(
 			new Sensor(new TopCode(OBJECT)));
-                 StatementFactory.registerStatementType(
-			new Sensor(new TopCode(SOUND)));
-                  StatementFactory.registerStatementType(
-			new Sensor(new TopCode(MUTE)));
 	}
 	
 	
@@ -67,20 +64,15 @@ public class Sensor extends PStatement {
 	public String getName() {
 		switch (top.getCode()) {
 		case PRESS:
-                    return "PRESS";
-			//return "UNTIL-PRESS";
+			return "UNTIL-PRESS";
 		case RELEASE:
 			return "UNTIL-RELEASE";
 		case LIGHT:
 			return "UNTIL-LIGHT";
 		case DARK:
 			return "UNTIL-DARK";
-                case OBJECT:
-                    return "UNTIL-OBJECT";
-                case SOUND:
-                    return "UNTIL-SOUND";
-                case MUTE: 
-                    return "UNTIL-MUTE";
+		case OBJECT:
+			return "UNTIL-OBJECT";
 		default:
 			return "SENSOR";
                     
@@ -93,74 +85,39 @@ public class Sensor extends PStatement {
 	}
 	
 	
-	public String getTest() {
+	public ArrayList<String> getTest(String label) {
+		ArrayList<String> a = new ArrayList();
+
+		// INPUT_READ(layer,port,sensor_type,sensor_mode,variable)
 		switch (top.getCode()) {
 		case PRESS:
-                    System.out.println("SENSOR_1 == 0");
-			return "SENSOR_1 == 0";//"!SensorValueBool(SENSOR_1)";
+			a.add("INPUT_READ(LAYER, PORT_TOUCH, SEN_TYPE_TOUCH, SEN_MODE_TOUCH_TOUCH, senTouch)");
+			a.add("JR_EQ8(senTouch, 1, "+label+")");
+			break;
 		case RELEASE:
-			return "SENSOR_1 == 1";
+			a.add("INPUT_READ(LAYER, PORT_TOUCH, SEN_TYPE_TOUCH, SEN_MODE_TOUCH_TOUCH, senTouch)");
+			a.add("JR_EQ8(senTouch, 0, "+label+")");
+			break;
 		case DARK:
-			return "SensorValue(S3) > 42";
+			a.add("INPUT_READ(LAYER, PORT_LIGHT, SEN_TYPE_LIGHT, SEN_MODE_LIGHT_REFLECTED, senLight)");
+			a.add("JR_GT8(senLight, 42, "+label+")");
+			break;
 		case LIGHT:
-			return "SensorValue(S3) < 42";
-                case OBJECT:
-                    return "SensorUS(IN_4) < 15 ";
-                case SOUND:
-                   return "SensorValue(S2) > 10";
-                case MUTE:
-                    return "SensorValue(S2)<10";
+			a.add("INPUT_READ(LAYER, PORT_LIGHT, SEN_TYPE_LIGHT, SEN_MODE_LIGHT_REFLECTED, senLight)");
+			a.add("JR_LTEQ8(senLight, 42, "+label+")");
+			break;
+		case OBJECT:
+			a.add("INPUT_READ(LAYER, PORT_ULTRASONIC, SEN_TYPE_ULTRASONIC, SEN_MODE_ULTRASONIC_CM, senUltrasonic)");
+			a.add("JR_LTEQ8(senUltrasonic, 15, "+label+")");
+			break;
 		default:
-			return "1";
+			a.add("JR("+label+")");
 		}
+
+		return a;
 	}
 
 
-	public String getSensorID() {
-		switch (top.getCode()) {
-		case PRESS:                   
-		case RELEASE:
-                    return "IN_1";
-			
-		case DARK:
-		case LIGHT:
-                    return "IN_3";
-			
-                case OBJECT:
-                    return "IN_4";
-                case SOUND:
-                case MUTE:
-                    return "IN_2";
-		default:
-                    return "IN_1";
-			
-		}
-	}
-			
-	
-
-	public String getType() {
-		switch (top.getCode()) {
-		case PRESS:
-		case RELEASE:
-                    return
-                            "Touch";
-			
-		case LIGHT:
-		case DARK:
-			return "Light";
-                case OBJECT:
-                    return "Ultrasonic";
-                    
-                case SOUND:
-                case MUTE:
-                    return "Sound";
-		default:
-			return "Touch";
-		}
-	}
-
-	
 	public void compile(Program program) throws CompileException {
 		setDebugInfo(program);
 		if (this.next != null) next.compile(program);
@@ -173,9 +130,7 @@ public class Sensor extends PStatement {
 		case RELEASE: out.println("   <until-release />"); break;
 		case LIGHT:   out.println("   <until-light />"); break;
 		case DARK:    out.println("   <until-dark />"); break;
-                case OBJECT: out.println("   <until-object />"); break;
-                case SOUND : out.println( " <until-sound />"); break;
-                  case MUTE : out.println( " <until-mute />"); break;     
+		case OBJECT:  out.println("   <until-object />"); break;
 		default:
 		}
 	}
