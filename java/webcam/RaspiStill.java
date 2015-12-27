@@ -14,27 +14,29 @@ package webcam;
 public class RaspiStill
 {
     // Define the path to the raspistill executable.
-    private final String _raspistillPath = "/opt/vc/bin/raspistill";
+    private String _raspistillPath = "/opt/vc/bin/raspistill";
     // Define the amount of time that the camera will use to take a photo.
-    private final int _picTimeout = 5000;
+    private int _picTimeout = 5000;
     // Define the image quality.
-    private final int _picQuality = 100;
+    private int _picQuality = 100;
 
     // Specify a default image width.
-    private int _picWidth = 1024;
+    private int _picWidth = 2592;
     // Specify a default image height.
-    private int _picHeight = 768;
+    private int _picHeight = 1944;
     // Specify a default image name.
-    private String _picName = "example.jpg";
+    private String _picName = "tern-program.jpg";
     // Specify a default image encoding.
     private String _picType = "jpg";
 
+    private String _outPath = "";
+
     // Default class constructor.
-    public void RaspiStill()
+    public void RaspiStill(String rsPath, String outPath)
     {
-        // Do anything else here. For example, you could create another
-        // constructor which accepts an alternate path to raspistill,
-        // or defines global parameters like the image quality.
+        _raspistillPath = rsPath;
+        _outPath = outPath + "/";
+
     }
 
     // Default method to take a photo using the private values for name/width/height.
@@ -44,7 +46,8 @@ public class RaspiStill
         try
         {
             // Determine the image type based on the file extension (or use the default).
-            if (_picName.indexOf('.')!=-1) _picType = _picName.substring(_picName.lastIndexOf('.')+1);
+            if (_picName.indexOf('.')!=-1)
+                _picType = _picName.substring(_picName.lastIndexOf('.')+1);
 
             // Create a new string builder with the path to raspistill.
             StringBuilder sb = new StringBuilder(_raspistillPath);
@@ -62,7 +65,7 @@ public class RaspiStill
             // Specify the image type.
             sb.append(" -e " + _picType);
             // Specify the name of the image.
-            sb.append(" -o " + _picName);
+            sb.append(" -o " + _outPath + _picName);
 
             // Invoke raspistill to take the photo.
             Runtime.getRuntime().exec(sb.toString());
