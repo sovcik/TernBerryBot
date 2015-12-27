@@ -103,15 +103,15 @@ public class TangibleCompiler {
          
          notifyProgress("Loading statements...", 0.6);
          for (TopCode top : spots) {
-            s = StatementFactory.createStatement(top);
-            if (s != null) 
-            {
-               statements.add(s);
-               System.out.println(s);
-               s.registerConnections(map);
-               //commented by mariam
-              top.draw(g);
-            }
+             s = StatementFactory.createStatement(top);
+             if (s != null)
+             {
+                statements.add(s);
+                System.out.println(s);
+                s.registerConnections(map);
+                //commented by mariam
+                top.draw(g);
+             }
          }
          //commented by mariam
          if (annotate) map.draw(g);
@@ -144,7 +144,7 @@ public class TangibleCompiler {
             }
          }
 
-        program.setImage(image);
+         program.setImage(image);
          program.setStatements(statements);
          return program;
       }
@@ -170,13 +170,13 @@ public class TangibleCompiler {
 		notifyProgress("Scanning for TopCodes...", 0.0);
 		List<TopCode> spots = scanner.scan(image);
                 
-                for(TopCode top : spots)
-                    System.out.println(top.toString());
-                System.out.println("I am out");
+        for(TopCode top : spots)
+            System.out.println(top.toString());
+
+        System.out.println("I am out");
                
 		return doCompile(spots);
 	}      
-
 
    
 /**
@@ -188,12 +188,11 @@ public class TangibleCompiler {
 		
 		notifyProgress("Scanning for TopCodes...", 0.0);
 		try {
-                 scanner = new Scanner();
-                    List<TopCode> spots =  new java.util.ArrayList<TopCode>();
-                        spots= scanner.scan(filename);
-                        
-                     
+            scanner = new Scanner();
+            List<TopCode> spots =  new java.util.ArrayList<TopCode>();
+            spots= scanner.scan(filename);
 			return doCompile(spots);
+
 		} catch (java.io.IOException iox) {
 			this.compiling = false;
 			notifyProgress("Done.", 1.0);
@@ -202,11 +201,9 @@ public class TangibleCompiler {
 		}
 	}
 
-
    
 /**
- * Tangible compile function: generate a program from an array of pixel
- * data.
+ * Tangible compile function: generate a program from an array of pixel data.
  */int i=0;
 	public Program compile(int w, int h, int [] pixels) throws CompileException {
 		this.compiling = true;
@@ -223,7 +220,6 @@ public class TangibleCompiler {
 		return doCompile(spots);
 	}
 
-
    
 	public boolean getAnnotate() {
 		return this.annotate;
@@ -233,11 +229,10 @@ public class TangibleCompiler {
 		this.annotate = annotate;
 	}
 	
-
-
-
 	protected void notifyBegin() { }
+
 	protected void notifyEnd() { }
+
 	protected void notifyProgress(String task, double progress) {  }
 }
 
