@@ -134,7 +134,7 @@ WindowListener
 		this.compiling = false;
 		this.progress  = new ProgressFlower();
 		//this.webcam    = new WebCam();
-      this.webcam    = new QTWebCam();
+      	this.webcam    = new QTWebCam();
 		this.animator  = new Timer(300, this);
 		this.command   = CMD_COMPILE;
 		this.error     = CompileException.ERR_NONE;
@@ -152,6 +152,7 @@ WindowListener
 		//--------------------------------------------------
 		// Set up the frame.
 		//--------------------------------------------------
+
 		setOpaque(true);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.setContentPane(this);
@@ -160,6 +161,19 @@ WindowListener
 		frame.setVisible(true);
 		frame.setIconImage(Palette.ICON_LG);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		if (this.props.getProperty("webcam.type").equals("WinUSBCam")) {
+			this.webcam = new WinUSBCam(props);
+		} else if (props.getProperty("webcam.type").equals("ExtCamApp")) {
+			this.webcam = new ExtCamApp(props);
+		} else if (props.getProperty("webcam.type").equals("none")) {
+			this.webcam = new WebCam(props);
+		} else {
+			log("Properties: unknown or undefined camera type");
+			System.err.println("Error: Properties - unknown or undefined camera type");
+			System.exit(1);
+		}
+
 
 		
 		//--------------------------------------------------
@@ -295,14 +309,14 @@ WindowListener
 
 		
 		//----------------------------------------------------
-      // Status buttons
-      //----------------------------------------------------
+        // Status buttons
+        //----------------------------------------------------
 		int ix = w - BORDER - 20;
 		int iy = h - BORDER - 10;
 		BufferedImage icon;
 
 		//icon = webcam.isCameraOpen() ? Palette.CAMERA_ON : Palette.CAMERA_OFF;
-      icon = Palette.CAMERA_ON;
+        icon = Palette.CAMERA_ON;
 		g.drawImage(icon, ix - icon.getWidth(), iy - icon.getHeight(), null);
 		ix -= icon.getWidth() + 20;
 
@@ -485,8 +499,7 @@ WindowListener
 			//-------------------------------------------------
 			System.out.println(program);
 			program.save("program.brick");
-			
-			
+
 			//-------------------------------------------------
 			// Send the program to the Lego brick
 			//-------------------------------------------------

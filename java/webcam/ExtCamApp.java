@@ -83,7 +83,7 @@ public class ExtCamApp extends WebCam {
 
             File f = new File(outFile);
             if(!f.exists() || f.isDirectory())
-                throw new Exception("External app did not create any file. Expected: " + outFile);
+                throw new Exception("Error: External app did not create any file. Expected: " + outFile);
 
         }
         catch (Exception e) {

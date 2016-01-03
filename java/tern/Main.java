@@ -29,6 +29,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -140,6 +141,8 @@ WindowListener
 			this.webcam = new WinUSBCam(props);
 		} else if (props.getProperty("webcam.type").equals("ExtCamApp")) {
 			this.webcam = new ExtCamApp(props);
+		} else if (props.getProperty("webcam.type").equals("none")) {
+			this.webcam = new WebCam(props);
 		} else {
 			log("Properties: unknown or undefined camera type");
 			System.err.println("Error: Properties - unknown or undefined camera type");
@@ -466,6 +469,24 @@ WindowListener
 			//-------------------------------------------------
 			System.out.println(program);
 			program.save("tern-program.lms");
+			log("Program saved to tern-program.lms.");
+
+			//-------------------------------------------------
+			// Compile program to bytecode
+			//-------------------------------------------------
+			//*** TODO: TEST!!!!
+			try {
+				String cmd = "java -jar assembler.jar ../tern-program"; //extension .lms is added automatically
+				Runtime.getRuntime().exec(cmd);
+				Thread.sleep(1000);
+				File f = new File("tern-program.rbf");
+				if(!f.exists() || f.isDirectory())
+					throw new Exception("Error: No RBF file created. Expected: tern-program.rbf");
+			} catch (Exception E){
+				System.err.println(E.toString());
+				System.exit(2);
+			}
+
 
 			//-------------------------------------------------
 			// Send the program to the brick
