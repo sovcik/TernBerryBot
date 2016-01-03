@@ -27,7 +27,7 @@ public class WebCam {
 
    protected int width;
    protected int height;
-   protected String type;
+   protected String type = "none";
 
    protected boolean webCamReady = false;
 
@@ -38,7 +38,7 @@ public class WebCam {
    public boolean isReady(){return webCamReady;}
 
    public void initialize() throws WebCamException {
-      webCamReady = true;
+      webCamReady = false;
    }
 
    public void uninitialize() throws WebCamException {
