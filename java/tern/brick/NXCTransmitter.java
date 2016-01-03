@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tern.nqc;
+package tern.brick;
 import java.io.BufferedInputStream;
-import java.io.IOException;
+
 import tern.compiler.CompileException;
 
 /**
@@ -14,7 +14,7 @@ import tern.compiler.CompileException;
 public class NXCTransmitter {
      private String firmware = "firm0328.lgo";
 
-	/** NXC Compiler binary (nqc.exe) */	
+	/** NXC Compiler binary (brick.exe) */
 	private String compiler;
 
 
