@@ -2,7 +2,8 @@
  * @(#) Forward.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,7 +57,7 @@ public class Forward extends PStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Forward();");
+      program.addInstruction("CALL(Forward)");
       if (this.next != null) next.compile(program);
    }
 

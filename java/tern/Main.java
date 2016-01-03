@@ -446,14 +446,14 @@ WindowListener
 			//-------------------------------------------------
 			if (webcam.isCameraOpen()) {
             BufferedImage image = webcam.capture("capture.jpg");
-				//webcam.captureFrame();
-				log("Captured image from webcam");
+			//webcam.captureFrame();
+			log("Captured image from webcam");
             this.program = compiler.compile(image);
+
             /*
-				this.program = compiler.compile(
-					webcam.getFrameWidth(),
-					webcam.getFrameHeight(),
-					webcam.getFrameData());
+				webcam.getFrameWidth(),
+				webcam.getFrameHeight(),
+				webcam.getFrameData());
             */
 			}
 			
@@ -486,7 +486,7 @@ WindowListener
 			
 			
 			//-------------------------------------------------
-			// Send the program to the RCX
+			// Send the program to the Lego brick
 			//-------------------------------------------------
 			if (program.hasStartStatement()) {
 				progress.setMessage("Downloading program...");

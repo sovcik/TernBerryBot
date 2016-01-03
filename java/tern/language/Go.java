@@ -2,7 +2,8 @@
  * @(#) Go.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,22 +74,22 @@ public class Go extends PStatement {
       setDebugInfo(program);
       switch (top.getCode()) {
       case FWD_A:
-         program.addInstruction("   StartMotor(OUT_A, 3);");
+         program.addInstruction("CALL(StartMotor, MOTOR_A, MOTOR_SPEED)");
          break;
       case REV_A:
-         program.addInstruction("   StartMotor(OUT_A, -3);");
+         program.addInstruction("CALL(StartMotor, MOTOR_A, MOTOR_NEGATIVE_SPEED)");
          break;
       case FWD_B:
-         program.addInstruction("   StartMotor(OUT_B, 3);");
+         program.addInstruction("CALL(StartMotor, MOTOR_B, MOTOR_SPEED)");
          break;
       case REV_B:
-         program.addInstruction("   StartMotor(OUT_B, -3);");
+         program.addInstruction("CALL(StartMotor, MOTOR_B, MOTOR_NEGATIVE_SPEED)");
          break;
       case FWD_C:
-         program.addInstruction("   StartMotor(OUT_C, 3);");
+         program.addInstruction("CALL(StartMotor, MOTOR_C, MOTOR_SPEED)");
          break;
       case REV_C:
-         program.addInstruction("   StartMotor(OUT_C, -3);");
+         program.addInstruction("CALL(StartMotor, MOTOR_C, MOTOR_NEGATIVE_SPEED)");
          break;
       }
       if (this.next != null) next.compile(program);

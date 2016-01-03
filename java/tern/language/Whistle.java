@@ -56,7 +56,7 @@ public class Whistle extends PStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Whistle();");
+      program.addInstruction("CALL(Whistle)");
       if (this.next != null) next.compile(program);
    }
 

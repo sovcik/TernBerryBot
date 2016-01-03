@@ -2,7 +2,8 @@
  * @(#) Wait.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +23,13 @@ package tern.language;
 import tern.compiler.*;
 import topcodes.TopCode;
 
+import java.util.ArrayList;
+
 
 public class Wait extends PStatement {
 
 	public static final int CODE = 611;
+	public static int waitLoop = 0;
    
 	public Wait(TopCode top) {
 		super(top);
@@ -53,28 +57,26 @@ public class Wait extends PStatement {
 
 
 	public void compile(Program program) throws CompileException {
-	   setDebugInfo(program);
-	   if (next != null && next instanceof Sensor) {
-		   switch (next.getCode()) {
-		   case Sensor.PRESS:
-			   program.addInstruction("   WaitForPress();");
-			   break;
-		   case Sensor.RELEASE:
-			   program.addInstruction("   WaitForRelease();");
-			   break;
-		   case Sensor.LIGHT:
-			   program.addInstruction("   WaitForLight();");
-			   break;
-		   case Sensor.DARK:
-			   program.addInstruction("   WaitForDark();");
-			   break;
-		   }
-	   }
-	   else if (next != null && next instanceof Num) {
-		   int d = ((Num)next).getValue() * 100;
-		   program.addInstruction("   Wait(" + d + ");");
-	   }
-	   if (this.next != null) next.compile(program);
+		ArrayList<String> a;
+		int i = 0;
+
+		waitLoop++;
+	   	setDebugInfo(program);
+
+	   	if (next != null && next instanceof Sensor) {
+			program.addInstruction("wait_"+waitLoop);
+			a = ((Sensor) next).getTest("wait_"+waitLoop);
+			while (i < a.size()) {
+				program.addInstruction(a.get(i));
+				i++;
+			}
+	   	}
+	   	else if (next != null && next instanceof Num) {
+		   	int d = ((Num)next).getValue() * 100;
+		   	program.addInstruction("CALL(Wait," + d + ")");
+	   	}
+
+		if (this.next != null) next.compile(program);
 	}
 
 

@@ -56,7 +56,7 @@ public class Shuffle extends PStatement {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("   Shuffle();");
+      program.addInstruction("CALL(Shuffle)");
       if (this.next != null) next.compile(program);
    }
 

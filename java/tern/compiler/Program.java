@@ -2,7 +2,8 @@
  * @(#) Program.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +42,7 @@ import javax.imageio.ImageIO;
  */
 public class Program {
 
-   
-	/** List of instructions */
+   /** List of instructions */
 	protected List<String> code;
 	
 	/** Symbol lookup table (maps labels to line numbers) */
@@ -65,6 +65,9 @@ public class Program {
 	
 	/** Used to generate statement compile-time ID numbers */
 	public int COMPILE_ID = 0;
+
+    /** padding/indenting program code statements */
+    public String pad = "";
 	
 	
 	public Program() {
@@ -131,7 +134,7 @@ public class Program {
  * to the program.
  */
    public void addInstruction(String instr) {
-      this.code.add(instr);
+      this.code.add(pad+instr);
    }
 
    
@@ -306,4 +309,16 @@ public class Program {
             ymax - ymin + 200);
       }
    }
+
+   public void codeIndent(){
+      pad = pad + "  ";
+   }
+
+   public void codeOutdent(){
+      if (pad.length() >= 2) {
+         pad = pad.substring(2);
+      }
+   }
+
 }
+

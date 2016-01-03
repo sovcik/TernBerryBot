@@ -2,7 +2,8 @@
  * @(#) Repeat.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@
  */
 package tern.language;
 
+import java.util.*;
 import tern.compiler.*;
 import topcodes.TopCode;
 
@@ -33,7 +35,8 @@ public class Repeat extends PStatement {
 	public static int NEST = 0;
 	public static int VAR = 0;
 
-	
+	public static Stack<ArrayList> st = new Stack();
+
 	public Repeat(TopCode top) {
 		super(top);
 	}
@@ -45,8 +48,8 @@ public class Repeat extends PStatement {
 		StatementFactory.registerStatementType(
 			new Repeat(new TopCode(END)));
 	}
-	
-	
+
+
 	public int getCode() {
 		return top.getCode();
 	}
@@ -74,40 +77,100 @@ public class Repeat extends PStatement {
 	
 	
 	protected void compileEndRepeat(Program program) throws CompileException {
+		ArrayList<String> a;
+		int i = 0;
+
 		if (Repeat.NEST > 0) {
-			program.addInstruction("   }");
-			Repeat.NEST--;
+			a = st.pop();
+			while (i < a.size()) {
+				program.addInstruction(a.get(i));
+				i++;
+			}
 		}
+
+		Repeat.NEST--;
+
+		program.codeOutdent();
 		if (this.next != null) next.compile(program);
+
 	}
 	
 	
 	protected void compileBeginRepeat(Program program) throws CompileException {
-		
-		if (next != null && next instanceof Num) {
-			String var = "count" + VAR++;
-			int param = ((Num)next).getValue();
-			program.addInstruction("   int " + var + " = 0;");
-			program.addInstruction("   while (" + var + " < " + param + ") {");
-			program.addInstruction("      " + var + "++;");
-		}
-		else if (next != null && next instanceof Sensor) {
-			Sensor sen = (Sensor)next;
-                        String senType= sen.getType();
-                        program.addInstruction("   SetSensor"+senType+"(" +
-								   sen.getSensorID() + ");");
-                        program.addInstruction("   while (" + sen.getTest() + ") {");
-      		}
-		else {
-			program.addInstruction("   while (1) {");
-		}
+
+		int i;
+
+		// count depth of nested loops
 		int nest = NEST;
 		NEST++;
+
+		ArrayList<String> a = new ArrayList();
+
+		// each new loop is going to have unique label & counter
+		String var = "count" + VAR;
+		String loopLabel = "loop" + VAR;
+		VAR++;
+
+		if (next != null && next instanceof Num) {
+			int param = ((Num)next).getValue();
+
+			// initialize loop counter
+			program.addInstruction("DATA32 " + var );
+			program.addInstruction("MOVE32_32(0, " + var + ")");
+
+			// add loop label
+			program.addInstruction(loopLabel + ":");
+
+			// and indent code following the label
+			program.codeIndent();
+
+			// push instructions which should be added at the end of loop (after processing instructions inside loop)
+			a.add("ADD32(1, " + var + "," + var + ")");
+			a.add("JR_LTE32(" + var + "," + param + "," + loopLabel + ")");
+			st.push(a);
+
+		}
+		else if (next != null && next instanceof Sensor) {
+			// add loop label
+			program.addInstruction(loopLabel + ":");
+
+			// and indent code following the label
+			program.codeIndent();
+
+			Sensor sen = (Sensor)next;
+			a = sen.getTest(loopLabel);
+
+			st.push(a);
+		}
+		else {
+			// add loop label
+			program.addInstruction(loopLabel + ":");
+
+			// and indent code following the label
+			program.codeIndent();
+
+			// evaluate loop condition
+			a.add("JR(" + loopLabel + ")");  // loop forever
+			st.push(a);
+		}
+
+		// compile remaining symbols
 		if (this.next != null) next.compile(program);
-		if (NEST > nest) { 
-			program.addInstruction("   }");
+
+		// if symbol EndRepeat is missing, then do nothing
+		if (NEST > nest) {
+			program.addInstruction("// EndRepeat missing");
+			a = st.pop();
+			i = 0;
+			while (i < a.size()) {
+				program.addInstruction(a.get(i));
+				i++;
+			}
+            program.codeOutdent();
 			NEST--;
 		}
+
+
 	}
 	
 	

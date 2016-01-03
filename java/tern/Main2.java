@@ -2,7 +2,8 @@
  * @(#) Main.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2015 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -114,7 +115,7 @@ WindowListener
 
 	public Main2() {
 		super(true);
-		Main2.instance=this;
+		Main2.instance = this;
 
 		//--------------------------------------------------
 		// Load the configuration properties
@@ -123,19 +124,80 @@ WindowListener
 			this.props = new Properties();
 			this.props.load(new java.io.FileInputStream("config.properties"));
 		} catch (IOException iox) {
-			iox.printStackTrace();
+			System.err.println("Error: Failed to load 'config.properties'");
 			System.exit(1);
 		}
-		
+
+
+		//--------------------------------------------------
+		// Create the log directory and start logging
+		//--------------------------------------------------
+		this.logger = new Logger(getProperty("log.dir"));
+		if (getBooleanProperty("log.enabled")) {
+			this.logger.start();
+		}
+
+		//--------------------------------------------------
+		// Determine camera type
+		//--------------------------------------------------
+		if (this.props.getProperty("webcam.type").equals("WinUSBCam")) {
+			this.webcam = new WinUSBCam(props);
+		} else if (props.getProperty("webcam.type").equals("ExtCamApp")) {
+			this.webcam = new ExtCamApp(props);
+		} else {
+			log("Properties: unknown or undefined camera type");
+			System.err.println("Error: Properties - unknown or undefined camera type");
+			System.exit(1);
+		}
+
+		//--------------------------------------------------
+		// Register statements for the compiler
+		//--------------------------------------------------
+		{
+			Backward.register();
+			Beep.register();
+			End.register();
+			Forward.register();
+			Go.register();
+			Growl.register();
+			Left.register();
+			Num.register();
+			Repeat.register();
+			Right.register();
+			Sensor.register();
+			Shake.register();
+			Shuffle.register();
+			Song.register();
+			Spin.register();
+			Start.register();
+			Stop.register();
+			Wait.register();
+			Whistle.register();
+			Wiggle.register();
+		}
+
+
+		//--------------------------------------------------
+		// Start the camera and connect to the camera (this
+		// might fail if the camera isn't connected yet).
+		//--------------------------------------------------
+		try {
+			this.webcam.initialize();
+		} catch (Exception x) {
+			log(x);
+			System.err.println("Error: Camera failed to initialize.");
+			System.exit(1);
+		}
+
 		this.frame     = new JFrame("Tern Tangible Programming");
 		this.tform     = new AffineTransform();
 		this.compiler  = new TangibleCompiler();
 		//this.nqc       = new Transmitter(props);
-                this.nxc= new NXCTransmitter(props);
+		//this.nxc= new NXCTransmitter(props);
 		this.program   = null;
 		this.compiling = false;
 		this.progress  = new ProgressFlower();
-		this.webcam    = new WebCam();
+
 		this.animator  = new Timer(300, this);
 		this.command   = CMD_COMPILE;
 		this.error     = CompileException.ERR_NONE;
@@ -162,57 +224,6 @@ WindowListener
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.setIconImage(Palette.ICON_LG);
 
-		
-		//--------------------------------------------------
-		// Register statements for the compiler
-		//--------------------------------------------------
-		{
-			Backward.register();
-			Beep.register();
-			End.register();
-			Forward.register();
-			Go.register();
-			Growl.register();
-			Left.register();
-			Num.register();
-			Repeat.register();
-			Right.register();
-			Sensor.register();
-			Shake.register();
-			Shuffle.register();
-			Song.register();
-			Spin.register();
-			Start.register();
-			Stop.register();
-			Wait.register();
-			Whistle.register();
-			Wiggle.register();
-		}
-		
-		
-		//--------------------------------------------------
-		// Create the log directory and start logging
-		//--------------------------------------------------
-		this.logger = new Logger(getProperty("log.dir"));
-		if (getBooleanProperty("log.enabled")) {
-			this.logger.start();
-		}
-		
-		
-		//--------------------------------------------------
-		// Start the camera and connect to the camera (this
-		// might fail if the camera isn't connected yet).
-		//--------------------------------------------------
-		try {
-			this.webcam.initialize();
-			int w = getIntProperty("webcam.width");
-			int h = getIntProperty("webcam.height");
-                        //modified by mariam
-			this.webcam.openCamera(640, 480);
-		} catch (Exception x) {
-			log(x);
-		}
-		
 		requestFocusInWindow();
 	}
 		
@@ -224,18 +235,18 @@ WindowListener
 
 		int w = getWidth();
 		int h = getHeight();
-		
+
 		//--------------------------------------------------
 		// Background texture
 		//--------------------------------------------------
 		GradientPaint gp = new GradientPaint(
 			0, h + 100, Color.BLACK,
-			0, h/2, new Color(0x657794), 
+			0, h/2, new Color(0x657794),
 			true);
 		g.setPaint(gp);
 		g.fillRect(0, 0, w, h);
-		
-		
+
+
 		//----------------------------------------------------
 		// Main screen with logo in background
 		//----------------------------------------------------
@@ -252,7 +263,7 @@ WindowListener
 		int ih = Palette.LOGO.getHeight();
 		g.drawImage(Palette.LOGO, w/2 - iw/2, h/2 - ih/2, null);
 
-		
+
 		//----------------------------------------------------
 		// Copyright
 		//----------------------------------------------------
@@ -262,7 +273,7 @@ WindowListener
 		g.setColor(Color.GRAY);
 		g.drawString(copy, w - fw - BORDER, h - 8);
 
-		
+
 		//----------------------------------------------------
 		// Captured image
 		//----------------------------------------------------
@@ -270,11 +281,10 @@ WindowListener
 		g.setClip(rect);
 		if (program != null) {
 			BufferedImage image = program.getImage();
-			if (image != null) {
+			if (image != null)
 				g.drawRenderedImage(image, this.tform);
-			}
 		}
-		
+
 
 		//----------------------------------------------------
 		// TopCodes & statement names
@@ -283,11 +293,8 @@ WindowListener
 			AffineTransform oldt = g.getTransform();
 			g.transform(tform);
 			List<Statement> statements = program.getStatements();
-			for (Statement s : statements) 
-                        {
+			for (Statement s : statements)
 				s.getTopCode().draw(g);
-                                
-			}
 			g.setTransform(oldt);
 		}
 		g.setClip(oldc);
@@ -296,7 +303,7 @@ WindowListener
 		g.draw(rect);
 		g.setStroke(Palette.STROKE1);
 
-		
+
 		//----------------------------------------------------
       // Status buttons
       //----------------------------------------------------
@@ -304,7 +311,7 @@ WindowListener
 		int iy = h - BORDER - 10;
 		BufferedImage icon;
 
-		icon = webcam.isCameraOpen() ? Palette.CAMERA_ON : Palette.CAMERA_OFF;
+		icon = webcam.isReady() ? Palette.CAMERA_ON : Palette.CAMERA_OFF;
 		g.drawImage(icon, ix - icon.getWidth(), iy - icon.getHeight(), null);
 		ix -= icon.getWidth() + 20;
 
@@ -314,22 +321,22 @@ WindowListener
 		icon = onPlayButton() ? Palette.PLAY_DN : Palette.PLAY_UP;
 		ix = BORDER + 20;
 		g.drawImage(icon, ix, iy - icon.getHeight(), null);
-		
-	  
+
+
 		//----------------------------------------------------
 		// Progress indicator
 		//----------------------------------------------------
 		if (progress.isVisible()) {
 			progress.draw(g, w - BORDER - progress.getWidth() - 20, BORDER + 20);
 		}
-		
-		
+
+
 		//----------------------------------------------------
 		// Generate user error message
 		//----------------------------------------------------
 		if (this.error != CompileException.ERR_NONE) {
 			g.setFont(Palette.FONT20B);
-			
+
 			String message = "";
 			icon = null;
 			switch (error) {
@@ -346,8 +353,9 @@ WindowListener
 				message = "Uh oh! Make sure the RCX is turned on.";
 				icon = Palette.ERR_NO_RCX;
 				break;
-                        case CompileException.ERR_NO_NXT:
-                                message ="Uh oh! Make sure the NXT is connected and turned on.";
+			case CompileException.ERR_NO_NXT:
+				message = "Uh oh! Make sure the NXT is connected and turned on.";
+				break;
 			case CompileException.ERR_NO_TOWER:
 				message = "Uh oh! Make sure the Tower is plugged in.";
 				icon = Palette.ERR_NO_TOWER;
@@ -368,13 +376,13 @@ WindowListener
 				message = "Unknown compile error.";
 				break;
 			}
-			
+
 			// Draw error box
 			int ew = 500;
 			int eh = icon == null ? 65 : 300;
 			int ex = w - BORDER - ew - 20;
 			int ey = BORDER + 20;
-			
+
 			RoundRectangle2D box = new RoundRectangle2D.Double(ex, ey, ew, eh, 25, 25);
 			g.setPaint(Color.WHITE);
 			g.fill(box);
@@ -385,7 +393,7 @@ WindowListener
 			if (icon != null) {
 				g.drawImage(icon, ex + ew/2 - icon.getWidth()/2, ey + 10, null);
 			}
-			
+
 			fw = g.getFontMetrics().stringWidth(message);
 			g.setColor(Color.BLACK);
 			g.drawString(message, ex + ew/2 - fw/2, ey + eh - 15);
@@ -432,6 +440,7 @@ WindowListener
 	 * Begin a compile process in a separate thread.
 	 */
 	protected void compile() {
+
 		try {
 			this.program = null;
 			
@@ -447,33 +456,23 @@ WindowListener
 			Repeat.VAR = 0;
 		 
 			//-------------------------------------------------
-			// If the camera is connected, compile a picture
-			// from the webcam
+			// If the camera is connected, compile a picture from the webcam
 			//-------------------------------------------------
-         /*temp comments for */               
-			if (webcam.isCameraOpen()) {
-				webcam.captureFrame();
-				log("Captured image from webcam");
-                               
-                               webcam.saveFrameImage("cam2.png");
-                                this.program= compiler.compile("cam2.png") ;
-                                //commented by Mariam
-                              
-				/*this.program = compiler.compile(
-					webcam.getFrameWidth(),
-					webcam.getFrameHeight(),
-					webcam.getFrameData());*/
-			}
-			
-			//-------------------------------------------------
-			// Otherwise, let the user select a JPG file to compile
-			//-------------------------------------------------
-			else {
+			if (webcam.isReady()) {
+				log("Capturing image from webcam & compiling");
+				//TODO: for now sending file name instead of picture itself
+				this.program = compiler.compile(webcam.getFileName());
+
+				//-------------------------------------------------
+				// Otherwise, let the user select a JPG file to compile
+				//-------------------------------------------------
+			} else {
+				log("Camera not available, letting user to choose image file");
 				String filename = FileChooser.openFile("jpg");
 				if (filename == null) {
 					return;
 				} else {
-					log("Captured image from file system");
+					log("Captured image from file system ("+filename+")");
 					this.program = compiler.compile(filename);
 				}
 			}
@@ -490,17 +489,15 @@ WindowListener
 			// Save and log the program
 			//-------------------------------------------------
 			System.out.println(program);
-			//program.save("program.nqc");
-                        program.save("program.nxc");
-			
-			
+			program.save("tern-program.lms");
+
 			//-------------------------------------------------
-			// Send the program to the RCX
+			// Send the program to the brick
 			//-------------------------------------------------
 			if (program.hasStartStatement()) {
-				progress.setMessage("Downloading program...");
-				nxc.Run("program.nxc");
-                                //nqc.send("program.nqc");
+				progress.setMessage("Sending program to brick...");
+				//**** TODO: Send to brick
+
 			} else if (program.isEmpty()) {
 				setErrorCode(CompileException.ERR_NONE);
 			} else {
@@ -669,31 +666,31 @@ WindowListener
 /******************************************************************/
 	protected int mouseX;
 	protected int mouseY;
-   public void mouseClicked(MouseEvent e) { }
-   public void mouseMoved(MouseEvent e) { }
-   public void mouseEntered(MouseEvent e) { }
-   public void mouseExited(MouseEvent e) { }
-   public void mousePressed(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) { }
+    public void mouseMoved(MouseEvent e) { }
+    public void mouseEntered(MouseEvent e) { }
+    public void mouseExited(MouseEvent e) { }
+    public void mousePressed(MouseEvent e) {
       mouseX = e.getX();
       mouseY = e.getY();
       repaint();
-   }
-   public void mouseReleased(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
 	   if (onPlayButton()) {
 		   startCompile();
 	   }
 	   mouseX = -1;
 	   mouseY = -1;
 	   repaint();
-   }
-   public void mouseDragged(MouseEvent e) {
+    }
+    public void mouseDragged(MouseEvent e) {
 	   int dx = e.getX() - mouseX;
 	   int dy = e.getY() - mouseY;
 	   pan(dx, dy);
-      mouseX = e.getX();
-      mouseY = e.getY();
+       mouseX = e.getX();
+       mouseY = e.getY();
 	   repaint();
-   }
+    }
 	
 
 /******************************************************************/
@@ -747,8 +744,7 @@ WindowListener
 /*                          WINDOW EVENTS                         */
 /******************************************************************/
 	public void windowClosing(WindowEvent e) {
-		this.webcam.closeCamera();
-		this.webcam.uninitialize();
+		//this.webcam.uninitialize();
 		this.logger.stop();
 		frame.setVisible(false);
 		frame.dispose();
