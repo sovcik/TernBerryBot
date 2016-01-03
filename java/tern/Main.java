@@ -77,11 +77,8 @@ WindowListener
 	/** Used to compile JPEG images into robot programs */
 	protected TangibleCompiler compiler;
 	
-	/** Sends compiled programs to the RCX */
-	//	protected NQCTransmitter brick;
-        
-	/**Send compiled programms to the NXT - Mariam */
-	protected NXCTransmitter nxc;
+	/**Send compiled programms to the brick */
+	protected EV3ASMTransmitter brick;
 	
 	/** Configuration settings */
 	protected Properties props;
@@ -191,8 +188,7 @@ WindowListener
 		this.frame     = new JFrame("Tern Tangible Programming");
 		this.tform     = new AffineTransform();
 		this.compiler  = new TangibleCompiler();
-		//this.brick       = new NQCTransmitter(props);
-		//this.nxc= new NXCTransmitter(props);
+		this.brick     = new EV3ASMTransmitter(props);
 		this.program   = null;
 		this.compiling = false;
 		this.progress  = new ProgressFlower();
@@ -355,7 +351,7 @@ WindowListener
 			case CompileException.ERR_NO_NXT:
 				message = "Uh oh! Make sure the NXT is connected and turned on.";
 				break;
-			case CompileException.ERR_NO_NQC:
+			case CompileException.ERR_NO_COMPILER:
 				message = "No NQC compiler found.";
 				break;
 			case CompileException.ERR_SAVE_FILE:
@@ -420,6 +416,8 @@ WindowListener
 	 */
 	protected void compile() {
 
+		String progFileName = "tern-program.lms";
+
 		try {
 			this.program = null;
 			
@@ -468,32 +466,15 @@ WindowListener
 			// Save and log the program
 			//-------------------------------------------------
 			System.out.println(program);
-			program.save("tern-program.lms");
-			log("Program saved to tern-program.lms.");
-
-			//-------------------------------------------------
-			// Compile program to bytecode
-			//-------------------------------------------------
-			//*** TODO: TEST!!!!
-			try {
-				String cmd = "java -jar assembler.jar ../tern-program"; //extension .lms is added automatically
-				Runtime.getRuntime().exec(cmd);
-				Thread.sleep(1000);
-				File f = new File("tern-program.rbf");
-				if(!f.exists() || f.isDirectory())
-					throw new Exception("Error: No RBF file created. Expected: tern-program.rbf");
-			} catch (Exception E){
-				System.err.println(E.toString());
-				System.exit(2);
-			}
-
+			program.save(progFileName);
+			log("Program saved to "+progFileName);
 
 			//-------------------------------------------------
 			// Send the program to the brick
 			//-------------------------------------------------
 			if (program.hasStartStatement()) {
 				progress.setMessage("Sending program to brick...");
-				//**** TODO: Send to brick
+				brick.send(progFileName);
 
 			} else if (program.isEmpty()) {
 				setErrorCode(CompileException.ERR_NONE);

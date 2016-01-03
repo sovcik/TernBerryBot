@@ -362,7 +362,7 @@ WindowListener
 				message = "Uh oh! Make sure the Tower is plugged in.";
 				icon = Palette.ERR_NO_TOWER;
 				break;
-			case CompileException.ERR_NO_NQC:
+			case CompileException.ERR_NO_COMPILER:
 				message = "No NQC compiler found.";
 				break;
 			case CompileException.ERR_SAVE_FILE:
