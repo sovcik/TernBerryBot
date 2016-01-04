@@ -39,8 +39,7 @@ public class Transmitter {
     /** Compiler process */
     protected Process process;
 
-    /** Command to execute */
-    protected String [] command;
+
 
 
     public Transmitter() {} // default constructor
@@ -48,7 +47,6 @@ public class Transmitter {
     public Transmitter(Properties props) {
         this.compiler = props.getProperty("brick.compiler");
         this.process  = null;
-        this.command  = new String[4];
     }
 
 
@@ -56,6 +54,8 @@ public class Transmitter {
      * Sends a program to the brick.
      */
     public void send(String filename) throws CompileException {
+
+        String[] command = new String[2];
 
         command[0] = compiler;
         command[1] = filename;
@@ -68,13 +68,13 @@ public class Transmitter {
      * Asynchronous process monitoring...
      */
     protected void exec(String [] command) throws CompileException {
+        CompileException cx;
         try {
 
             int b;
             String sout = "", serr = "";
             BufferedInputStream in;
             int result;
-
 
             //---------------------------------------------
             // Start external process
@@ -104,8 +104,14 @@ public class Transmitter {
             }
         }
         catch (java.io.IOException iox) {
-            throw new CompileException(CompileException.ERR_NO_COMPILER);
+            throw new CompileException(CompileException.ERR_NO_COMPILER, "Compiler not found: "+command[0]);
         }
+    }
+
+    protected void exec(String command) throws CompileException {
+        String[] cmd = new String[1];
+        cmd[0] = command;
+        exec(cmd);
     }
 
 

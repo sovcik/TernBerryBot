@@ -19,8 +19,7 @@ public class NXCTransmitter extends Transmitter{
 	public NXCTransmitter(Properties props) {
 		this.compiler = props.getProperty("nxc.compiler");
 		this.process  = null;
-                this.Path = props.getProperty("nxc.path");
-		this.command  = new String[4];
+		this.Path = props.getProperty("nxc.path");
     }
         
        
@@ -28,13 +27,14 @@ public class NXCTransmitter extends Transmitter{
 	//04-09-2011
 	public void Run(String filename)throws CompileException
 	{
+		String[] command = new String[4];
 
-	command[0] = compiler;
-	command[1] = "-r";
-	command[2] = filename;
-	command[3] = "";
+		command[0] = compiler;
+		command[1] = "-r";
+		command[2] = filename;
+		command[3] = "";
 
-	exec(command);
+		exec(command);
 	}
 
 

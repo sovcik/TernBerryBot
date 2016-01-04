@@ -41,7 +41,13 @@ public class CompileException extends Exception {
 		super();
 		this.code = code;
 	}
-	
+
+	public CompileException(int code, String msg) {
+		super(msg);
+		this.code = code;
+	}
+
+
 	public int getErrorCode() {
 		return this.code;
 	}

@@ -352,7 +352,7 @@ WindowListener
 				message = "Uh oh! Make sure the NXT is connected and turned on.";
 				break;
 			case CompileException.ERR_NO_COMPILER:
-				message = "No NQC compiler found.";
+				message = "Compiler not found.";
 				break;
 			case CompileException.ERR_SAVE_FILE:
 				message = "Error saving program file.";
@@ -486,12 +486,15 @@ WindowListener
 			this.logger.log(program);
 		}
 		catch (IOException iox) {
+			this.logger.log(iox);
 			setErrorCode(CompileException.ERR_SAVE_FILE);
 		}
 		catch (CompileException cx) {
+			this.logger.log(cx);
 			setErrorCode(cx.getErrorCode());
 		}
 		catch (WebCamException wcx) {
+			this.logger.log(wcx);
 			setErrorCode(CompileException.ERR_CAMERA);
 		}
 		finally {

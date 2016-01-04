@@ -44,7 +44,7 @@ public class NQCTransmitter extends Transmitter{
 		this.compiler = props.getProperty("brick.compiler");
 		this.port     = props.getProperty("brick.port");
 		this.process  = null;
-		this.command  = new String[4];
+
    }
 
 
@@ -52,6 +52,8 @@ public class NQCTransmitter extends Transmitter{
 	 * Sends a program to the RCX.
 	 */
 	public void send(String filename) throws CompileException {
+
+		String[] command = new String[4];
          
 		/*
 		 * Format brick.exe command line:
