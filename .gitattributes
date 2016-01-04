@@ -4,6 +4,9 @@
 # Custom for Visual Studio
 *.cs     diff=csharp
 
+#Java
+*.java   text diff=java eol=crlf
+
 # Standard to msysgit
 *.doc	 diff=astextplain
 *.DOC	 diff=astextplain
