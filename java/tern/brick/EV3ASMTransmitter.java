@@ -35,7 +35,6 @@ public class EV3ASMTransmitter extends Transmitter {
         this.compiler = props.getProperty("brick.compiler");
         this.brickName  = props.getProperty("brick.bluetooth.name");
         this.process  = null;
-        this.command  = new String[4];
     }
 
 
@@ -71,43 +70,28 @@ public class EV3ASMTransmitter extends Transmitter {
         }
     }
 
-    private String compile(String filename) throws CompileException {
+    private String compile(String progFileName) throws CompileException {
 
         String bytecodeFile;
         String asmFile;
         int i;
 
-        i = filename.lastIndexOf(".");
+        i = progFileName.lastIndexOf(".");
         if (i>0)
-            asmFile = filename.substring(0, i);
+            asmFile = progFileName.substring(0, i); //extension .lms required, but not passed to assembler
         else
-            asmFile = filename;
+            asmFile = progFileName;
 
         bytecodeFile = asmFile + ".rbf";
 
-        //-------------------------------------------------
+        String[] command = compiler.replace("{program}",asmFile).split(" ");
+
+        // delete any existing previously created file
+        File f = new File(bytecodeFile);
+        f.delete();
+
         // Compile program to bytecode
-        //-------------------------------------------------
-        //*** TODO: TEST!!!!
-        command[0] = compiler;
-        command[1] = "-S";
-        command[2] = "-d";
-        command[3] = filename;
-
         exec(command);
-
-        try {
-            File f = new File(bytecodeFile);
-            f.delete(); // delete any existing previously created file
-            String cmd = "java -jar assembler.jar ../tern-program"; //extension .lms is added automatically
-            Runtime.getRuntime().exec(cmd);
-            Thread.sleep(1000);
-            if(!f.exists() || f.isDirectory())
-                throw new Exception("Error: No RBF file created. Expected: tern-program.rbf");
-        } catch (Exception E){
-            System.err.println(E.toString());
-            System.exit(2);
-        }
 
         return bytecodeFile;
 

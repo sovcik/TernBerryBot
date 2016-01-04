@@ -5,10 +5,14 @@
 	<contentEntry url="file://$MODULE_DIR$">
 		<excludeFolder url="file://$MODULE_DIR$/.idea"/>
 		<excludeFolder url="file://$MODULE_DIR$/cpp"/>
+		<excludeFolder url="file://$MODULE_DIR$/demo-img"/>
 		<excludeFolder url="file://$MODULE_DIR$/docs"/>
+		<excludeFolder url="file://$MODULE_DIR$/images"/>
+		<excludeFolder url="file://$MODULE_DIR$/lmsasm"/>
 		<excludeFolder url="file://$MODULE_DIR$/logs"/>
 		<excludeFolder url="file://$MODULE_DIR$/nqc"/>
 		<excludeFolder url="file://$MODULE_DIR$/nsi"/>
 		<excludeFolder url="file://$MODULE_DIR$/nxc"/>
+		<excludeFolder url="file://$MODULE_DIR$/sounds"/>
 	</contentEntry>
 </component>
