@@ -20,10 +20,8 @@
 package tern;
 
 import java.awt.Font;
-import java.awt.Color;
 import java.awt.Stroke;
 import java.awt.BasicStroke;
-import java.awt.GradientPaint;
 import java.awt.image.BufferedImage;
 import java.applet.AudioClip;
 import javax.imageio.ImageIO;
@@ -63,7 +61,7 @@ public class Palette {
 	 * Returns an audio clip, or null if the path was invalid.
 	 */
 	public static AudioClip createAudio(String path) {
-		java.net.URL audioURL = Main2.class.getResource(path);
+		java.net.URL audioURL = Main.class.getResource(path);
 		if (audioURL != null) {
 			return java.applet.Applet.newAudioClip(audioURL);
 		} else {
@@ -78,7 +76,7 @@ public class Palette {
 	 */
 	public static BufferedImage createImage(String path) {
 		try {
-			java.net.URL url = Main2.class.getResource(path);
+			java.net.URL url = Main.class.getResource(path);
 			if (url != null) {
 				return ImageIO.read(url);
 			} else {
