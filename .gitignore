@@ -27,6 +27,13 @@ logs/
 *.lnk
 
 # =========================
+# EV3 files
+# =========================
+
+tern-program.lms
+*.rbf
+
+# =========================
 # Operating System Files
 # =========================
 
@@ -54,5 +61,3 @@ logs/
 Network Trash Folder
 Temporary Items
 .apdisk
-tern-program.lms
-*.rbf
