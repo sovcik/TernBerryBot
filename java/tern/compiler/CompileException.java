@@ -21,19 +21,18 @@ package tern.compiler;
 
 public class CompileException extends Exception {
 
-	public static final int ERR_NONE        = 0;
-	public static final int ERR_NO_BLOCKS   = 1;
-	public static final int ERR_NO_BEGIN    = 2;
-	public static final int ERR_SAVE_FILE   = 3;
-	public static final int ERR_CAMERA      = 4;
-	public static final int ERR_NO_COMPILER = 5;
-	public static final int ERR_NO_RCX      = 6;
-	public static final int ERR_NO_TOWER    = 7;
-	public static final int ERR_LOAD_FILE   = 8;
-	public static final int ERR_FIRMWARE    = 9;
-	public static final int ERR_UNKNOWN     = 10;
-	public static final int ERR_NO_NXT      = 11;
-	public static final int ERR_NO_EV3      = 12;
+	public static final int ERR_NONE         		= 0;
+	public static final int ERR_NO_BLOCKS    		= 1;
+	public static final int ERR_NO_BEGIN     		= 2;
+	public static final int ERR_SAVE_FILE    		= 3;
+	public static final int ERR_CAMERA       		= 4;
+	public static final int ERR_NO_COMPILER  		= 5;
+	public static final int ERR_NO_LEGO_BRICK		= 6;
+	public static final int ERR_NO_TOWER     		= 7;
+	public static final int ERR_LOAD_FILE    		= 8;
+	public static final int ERR_FIRMWARE     		= 9;
+	public static final int ERR_UNKNOWN      		= 10;
+	public static final int ERR_BRICK_BT_FAILED     = 11;
 	
 	protected int code = ERR_NONE;
 
@@ -44,6 +43,11 @@ public class CompileException extends Exception {
 
 	public CompileException(int code, String msg) {
 		super(msg);
+		this.code = code;
+	}
+
+	public CompileException(int code, String msg, Throwable cause) {
+		super(msg, cause);
 		this.code = code;
 	}
 

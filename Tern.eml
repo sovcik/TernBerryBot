@@ -15,4 +15,8 @@
 		<excludeFolder url="file://$MODULE_DIR$/nxc"/>
 		<excludeFolder url="file://$MODULE_DIR$/sounds"/>
 	</contentEntry>
+	<levels>
+		<level name="bluecove-2.1.0" value="project"/>
+		<level name="ev3j-0.1.0" value="project"/>
+	</levels>
 </component>

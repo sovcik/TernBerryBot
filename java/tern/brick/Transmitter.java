@@ -28,27 +28,34 @@ import java.util.Properties;
 /**
  * Generic Transmitter class - should be used for implementation of specific transmitters
  */
-public class Transmitter {
+abstract class Transmitter {
 
     /** Compiler binary */
     protected String compiler;
 
-    /** Brick name */
-    protected String brickName;
-
     /** Compiler process */
     protected Process process;
 
+    /** Brick name */
+    protected String brickName;
 
+    /** Brick address */
+    protected String brickAddress;
+
+    /** Connection Type */
+    protected String connType;  //bluetooth, IP
 
 
     public Transmitter() {} // default constructor
 
-    public Transmitter(Properties props) {
+    public Transmitter(Properties props) throws CompileException {
         this.compiler = props.getProperty("brick.compiler");
         this.process  = null;
     }
 
+    // connect to brick - for transmitters which will need opening connection to brick
+    protected void connect() throws CompileException {
+    }
 
     /**
      * Sends a program to the brick.
@@ -115,7 +122,7 @@ public class Transmitter {
     }
 
 
-    private void generateError(String err) throws CompileException {
+     private void generateError(String err) throws CompileException {
         // This method should parse text output of external process
         // and throw relevant exception.
         // Generic implementation resolves all errors as UNKNOWN
