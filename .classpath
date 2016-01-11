@@ -5,6 +5,6 @@
 	<classpathentry kind="src" path="images"/>
 	<classpathentry kind="src" path="sounds"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/bluecove-2.1.0"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ev3j-0.1.0"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ev3j-0.1.1"/>
 	<classpathentry kind="output" path="out/production/Tern"/>
 </classpath>

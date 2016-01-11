@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Class-Path: bluecove-2.1.0.jar ev3j-0.1.0.jar
+Class-Path: lib/bluecove-2.1.0.jar lib/ev3j-0.1.1.jar
 Main-Class: tern.Main
 

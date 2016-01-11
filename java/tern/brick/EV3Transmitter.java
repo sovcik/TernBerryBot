@@ -93,14 +93,9 @@ public class EV3Transmitter extends Transmitter {
 
 
     private void generateError(String err) throws CompileException {
-        if (err.indexOf("No reply from RCX") >= 0) {
-            throw new CompileException(CompileException.ERR_NO_LEGO_BRICK);
-        }
-        else if (err.indexOf("Could not open serial port or USB device") >= 0) {
-            throw new CompileException(CompileException.ERR_NO_TOWER);
-        }
-        else if (err.indexOf("No firmware") >= 0) {
-            throw new CompileException(CompileException.ERR_FIRMWARE);
+        // TODO: analyze possible error messages
+        if (err.indexOf("Syntax error") >= 0) {
+            throw new CompileException(CompileException.ERR_UNKNOWN);
         }
         else {
             System.out.println(err);
