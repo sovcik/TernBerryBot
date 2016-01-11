@@ -71,7 +71,7 @@ public class NQCTransmitter extends Transmitter{
 
 	private void generateError(String err) throws CompileException {
 		if (err.indexOf("No reply from RCX") >= 0) {
-			throw new CompileException(CompileException.ERR_NO_RCX);
+			throw new CompileException(CompileException.ERR_NO_LEGO_BRICK);
 		}
 		else if (err.indexOf("Could not open serial port or USB device") >= 0) {
 			throw new CompileException(CompileException.ERR_NO_TOWER);

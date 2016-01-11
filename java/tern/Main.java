@@ -29,7 +29,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -78,7 +77,7 @@ WindowListener
 	protected TangibleCompiler compiler;
 	
 	/**Send compiled programms to the brick */
-	protected EV3ASMTransmitter brick;
+	protected EV3Transmitter brick;
 	
 	/** Configuration settings */
 	protected Properties props;
@@ -179,23 +178,33 @@ WindowListener
 		//--------------------------------------------------
 		try {
 			this.webcam.initialize();
-		} catch (Exception x) {
-			log(x);
+		} catch (Exception e) {
+			log(e);
 			System.err.println("Error: Camera failed to initialize.");
 			System.exit(1);
 		}
 
-		this.frame     = new JFrame("Tern Tangible Programming");
-		this.tform     = new AffineTransform();
+		try {
+			this.brick = new EV3Transmitter(props);
+		} catch (CompileException e) {
+			log(e);
+			log(e.getCause().toString());
+			System.err.println("Error: Connection to EV3 brick failed.");
+			System.exit(1);
+		}
+
 		this.compiler  = new TangibleCompiler();
-		this.brick     = new EV3ASMTransmitter(props);
 		this.program   = null;
 		this.compiling = false;
+
+		this.command   = CMD_COMPILE;
+		this.error     = CompileException.ERR_NONE;
+
+		this.frame     = new JFrame("Tern Tangible Programming");
+		this.tform     = new AffineTransform();
 		this.progress  = new ProgressFlower();
 
 		this.animator  = new Timer(300, this);
-		this.command   = CMD_COMPILE;
-		this.error     = CompileException.ERR_NONE;
 
 		
 		//--------------------------------------------------
@@ -270,7 +279,7 @@ WindowListener
 
 
 		//----------------------------------------------------
-		// Captured image
+		// Show captured image
 		//----------------------------------------------------
 		java.awt.Shape oldc = g.getClip();
 		g.setClip(rect);
@@ -282,7 +291,7 @@ WindowListener
 
 
 		//----------------------------------------------------
-		// TopCodes & statement names
+		// Show TopCodes & statement names
 		//----------------------------------------------------
 		if (program != null) {
 			AffineTransform oldt = g.getTransform();
@@ -344,12 +353,9 @@ WindowListener
 			case CompileException.ERR_CAMERA:
 				message = "Uh oh! Make sure the camera is plugged in.";
 				break;
-			case CompileException.ERR_NO_RCX:
-				message = "Uh oh! Make sure the RCX is turned on.";
+			case CompileException.ERR_NO_LEGO_BRICK:
+				message = "Uh oh! Make sure the Lego robot brick is turned on.";
 				icon = Palette.ERR_NO_RCX;
-				break;
-			case CompileException.ERR_NO_NXT:
-				message = "Uh oh! Make sure the NXT is connected and turned on.";
 				break;
 			case CompileException.ERR_NO_COMPILER:
 				message = "Compiler not found.";
@@ -474,6 +480,7 @@ WindowListener
 			//-------------------------------------------------
 			if (program.hasStartStatement()) {
 				progress.setMessage("Sending program to brick...");
+
 				brick.send(progFileName);
 
 			} else if (program.isEmpty()) {
@@ -485,16 +492,22 @@ WindowListener
 			log("Running program");
 			this.logger.log(program);
 		}
-		catch (IOException iox) {
-			this.logger.log(iox);
+		catch (IOException e) {
+			this.logger.log(e);
+			this.logger.log(e.getStackTrace().toString());
+			e.printStackTrace(System.err);
 			setErrorCode(CompileException.ERR_SAVE_FILE);
 		}
-		catch (CompileException cx) {
-			this.logger.log(cx);
-			setErrorCode(cx.getErrorCode());
+		catch (CompileException e) {
+			this.logger.log(e);
+			this.logger.log(e.getStackTrace().toString());
+			e.printStackTrace(System.err);
+			setErrorCode(e.getErrorCode());
 		}
-		catch (WebCamException wcx) {
-			this.logger.log(wcx);
+		catch (WebCamException e) {
+			this.logger.log(e);
+			this.logger.log(e.getStackTrace().toString());
+			e.printStackTrace(System.err);
 			setErrorCode(CompileException.ERR_CAMERA);
 		}
 		finally {

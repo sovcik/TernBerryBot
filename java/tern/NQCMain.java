@@ -354,7 +354,7 @@ WindowListener
 			case CompileException.ERR_CAMERA:
 				message = "Uh oh! Make sure the camera is plugged in.";
 				break;
-			case CompileException.ERR_NO_RCX:
+			case CompileException.ERR_NO_LEGO_BRICK:
 				message = "Uh oh! Make sure the RCX is turned on.";
 				icon = Palette.ERR_NO_RCX;
 				break;

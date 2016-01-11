@@ -40,7 +40,7 @@ public class NXCTransmitter extends Transmitter{
 
 	private void generateError(String err) throws CompileException {
 		if (err.indexOf("Download failed") >= 0) {
-			throw new CompileException(CompileException.ERR_NO_NXT);
+			throw new CompileException(CompileException.ERR_NO_LEGO_BRICK);
 		}
 		
 		else {
