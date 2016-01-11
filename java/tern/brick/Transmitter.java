@@ -22,13 +22,18 @@ package tern.brick;
 
 import java.io.BufferedInputStream;
 import tern.compiler.CompileException;
+
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.Level;
+import tern.Logger;
 
 
 /**
  * Generic Transmitter class - should be used for implementation of specific transmitters
  */
-abstract class Transmitter {
+public class Transmitter {
 
     /** Compiler binary */
     protected String compiler;
@@ -45,12 +50,15 @@ abstract class Transmitter {
     /** Connection Type */
     protected String connType;  //bluetooth, IP
 
+    protected Logger log;
+
 
     public Transmitter() {} // default constructor
 
-    public Transmitter(Properties props) throws CompileException {
+    public Transmitter(Properties props, Logger logger) throws CompileException {
         this.compiler = props.getProperty("brick.compiler");
         this.process  = null;
+        this.log = logger;
     }
 
     // connect to brick - for transmitters which will need opening connection to brick
@@ -75,13 +83,15 @@ abstract class Transmitter {
      * Asynchronous process monitoring...
      */
     protected void exec(String [] command) throws CompileException {
-        CompileException cx;
+
         try {
 
             int b;
             String sout = "", serr = "";
             BufferedInputStream in;
             int result;
+
+            log.log("[I] Executing "+ Arrays.toString(command));
 
             //---------------------------------------------
             // Start external process
@@ -106,12 +116,15 @@ abstract class Transmitter {
             try { result = process.waitFor(); }
             catch (InterruptedException ix) { result = 0; }
 
-            if (result != 0) {
-                generateError(sout + serr);
+            log.log("[I] Compiler ended with status "+result);
+            log.log("[I] Compiler output:\n"+sout+"\n"+serr);
+            if (result != 0 || (sout+serr).contains("error")) {
+                //generateError(sout +"\n"+ serr);
             }
         }
-        catch (java.io.IOException iox) {
-            throw new CompileException(CompileException.ERR_NO_COMPILER, "Compiler not found: "+command[0]);
+        catch (IOException e) {
+            throw new CompileException(CompileException.ERR_NO_COMPILER,
+                    "Compiler not found: "+command[0],e);
         }
     }
 
@@ -126,6 +139,7 @@ abstract class Transmitter {
         // This method should parse text output of external process
         // and throw relevant exception.
         // Generic implementation resolves all errors as UNKNOWN
+        log.log("[W] Compiler ended with errors:\n"+err);
         System.out.println(err);
         throw new CompileException(CompileException.ERR_UNKNOWN);
     }

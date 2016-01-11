@@ -43,8 +43,11 @@ public class Logger {
 			basedir + File.separator +
 			String.format("%1$tY_%1$tm_%1$td", Calendar.getInstance()) );
 	}
-	
-	
+
+	public PrintWriter getLog() {
+		return log;
+	}
+
 	public void start() {
 		if (isLogging()) return;
 		try {

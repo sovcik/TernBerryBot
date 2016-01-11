@@ -33,6 +33,7 @@ public class CompileException extends Exception {
 	public static final int ERR_FIRMWARE     		= 9;
 	public static final int ERR_UNKNOWN      		= 10;
 	public static final int ERR_BRICK_BT_FAILED     = 11;
+	public static final int ERR_TERN_LANG			= 12;
 	
 	protected int code = ERR_NONE;
 

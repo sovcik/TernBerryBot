@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
+import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -77,7 +78,7 @@ WindowListener
 	protected TangibleCompiler compiler;
 	
 	/**Send compiled programms to the brick */
-	protected EV3Transmitter brick;
+	protected Transmitter brick;
 	
 	/** Configuration settings */
 	protected Properties props;
@@ -185,11 +186,11 @@ WindowListener
 		}
 
 		try {
-			this.brick = new EV3Transmitter(props);
+			this.brick = new EV3Transmitter(props, logger);
 		} catch (CompileException e) {
 			log(e);
 			log(e.getCause().toString());
-			System.err.println("Error: Connection to EV3 brick failed.");
+			System.err.println("Error: Connection to Lego brick failed.");
 			System.exit(1);
 		}
 
@@ -366,6 +367,9 @@ WindowListener
 			case CompileException.ERR_LOAD_FILE:
 				message = "Error loading JPG image.";
 				break;
+			case CompileException.ERR_TERN_LANG:
+				message = "Error in Tern language definitions.";
+				break;
 			case CompileException.ERR_UNKNOWN:
 				message = "Unknown compile error.";
 				break;
@@ -430,7 +434,7 @@ WindowListener
 			//-------------------------------------------------
 			// Start the progress indicator
 			//-------------------------------------------------
-			log ("Starting compile");
+			log ("[I] Starting compile");
 			progress.setMessage("Compiling...");
 			progress.setVisible(true);
 			animator.start();
@@ -442,7 +446,7 @@ WindowListener
 			// If the camera is connected, compile a picture from the webcam
 			//-------------------------------------------------
 			if (webcam.isReady()) {
-				log("Capturing image from webcam & compiling");
+				log("[I] Capturing image from webcam & compiling");
 				//TODO: for now sending file name instead of picture itself
 				this.program = compiler.compile(webcam.getFileName());
 
@@ -450,12 +454,12 @@ WindowListener
 				// Otherwise, let the user select a JPG file to compile
 				//-------------------------------------------------
 			} else {
-				log("Camera not available, letting user to choose image file");
+				log("[I] Camera not available, letting user to choose image file");
 				String filename = FileChooser.openFile("jpg");
 				if (filename == null) {
 					return;
 				} else {
-					log("Captured image from file system ("+filename+")");
+					log("[I] Captured image from file system ("+filename+")");
 					this.program = compiler.compile(filename);
 				}
 			}
@@ -473,7 +477,7 @@ WindowListener
 			//-------------------------------------------------
 			System.out.println(program);
 			program.save(progFileName);
-			log("Program saved to "+progFileName);
+			log("[I] Program saved to "+progFileName);
 
 			//-------------------------------------------------
 			// Send the program to the brick
@@ -489,24 +493,24 @@ WindowListener
 				setErrorCode(CompileException.ERR_NO_BEGIN);
 			}
 			
-			log("Running program");
+			log("[I] Running program");
 			this.logger.log(program);
 		}
 		catch (IOException e) {
 			this.logger.log(e);
-			this.logger.log(e.getStackTrace().toString());
+			e.printStackTrace(logger.getLog());
 			e.printStackTrace(System.err);
 			setErrorCode(CompileException.ERR_SAVE_FILE);
 		}
 		catch (CompileException e) {
 			this.logger.log(e);
-			this.logger.log(e.getStackTrace().toString());
+			e.printStackTrace(logger.getLog());
 			e.printStackTrace(System.err);
 			setErrorCode(e.getErrorCode());
 		}
 		catch (WebCamException e) {
 			this.logger.log(e);
-			this.logger.log(e.getStackTrace().toString());
+			e.printStackTrace(logger.getLog());
 			e.printStackTrace(System.err);
 			setErrorCode(CompileException.ERR_CAMERA);
 		}
@@ -515,7 +519,7 @@ WindowListener
 			progress.setVisible(false);
 			compiling = false;
 			repaint();
-			log("Compile complete");
+			log("[I] Compile complete");
 		}
 	}
 

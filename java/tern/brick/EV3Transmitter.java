@@ -20,11 +20,13 @@
  */
 package tern.brick;
 
+import tern.Logger;
 import tern.compiler.CompileException;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Arrays;
 
 import EV3j.*;
 
@@ -42,7 +44,8 @@ public class EV3Transmitter extends Transmitter {
     EV3Device brick;
     String URL = "";
 
-    public EV3Transmitter(Properties props) throws CompileException {
+    public EV3Transmitter(Properties props, Logger logger) throws CompileException {
+        super(props, logger);
         this.compiler = props.getProperty("brick.compiler");
         this.connType = props.getProperty("brick.connection").toLowerCase();
         this.brickName  = props.getProperty("brick."+this.connType+".name");
@@ -73,17 +76,23 @@ public class EV3Transmitter extends Transmitter {
         String compiledProg;
 
         // compile asm file to bytecode and return file name of file containing bytecode
+        log.log("[I] Compiling "+filename);
         compiledProg = compile(filename);
+        log.log("[I] Compiling finished. Output file: "+compiledProg);
 
         try {
 
             this.connect();
 
             // send file containing bytecode to brick
+            log.log("[I] Sending "+compiledProg+" to brick.");
             brick.downloadToBrick(compiledProg, remoteFile);
+            log.log("[I] File saved in brick as "+remoteFile);
 
             // run file which we have downloaded
+            log.log("[I] Executing remote file "+remoteFile);
             brick.runFile(remoteFile);
+            log.log("[I] Execution completed.");
 
         } catch (EV3DeviceException e) {
             throw new CompileException(CompileException.ERR_NO_LEGO_BRICK, "Downloading of file "+compiledProg+" to brick failed.", e);
@@ -93,20 +102,25 @@ public class EV3Transmitter extends Transmitter {
 
 
     private void generateError(String err) throws CompileException {
-        // TODO: analyze possible error messages
-        if (err.indexOf("Syntax error") >= 0) {
-            throw new CompileException(CompileException.ERR_UNKNOWN);
+
+        log.log("[W] Compiler ended with errors:\n"+err);
+
+        // TODO: analyze possible error messages - ignoring all for now
+        if (err.contains("argcount error")) {
+            //throw new CompileException(CompileException.ERR_TERN_LANG);
         }
         else {
             System.out.println(err);
-            throw new CompileException(CompileException.ERR_UNKNOWN);
+            //throw new CompileException(CompileException.ERR_UNKNOWN);
         }
     }
 
     protected void connect() throws CompileException {
         try {
-            if (!brick.isConnected())
+            if (!brick.isConnected()) {
+                log.log("[I] Connecting to brick via "+URL);
                 brick.connect(URL);
+            }
         } catch (EV3DeviceException e) {
             throw new CompileException(CompileException.ERR_BRICK_BT_FAILED, "Connection to brick failed.", e);
         }
@@ -130,7 +144,7 @@ public class EV3Transmitter extends Transmitter {
 
         // delete any existing previously created file
         File f = new File(bytecodeFile);
-        f.delete();
+        //f.delete();
 
         // Compile program to bytecode
         exec(command);

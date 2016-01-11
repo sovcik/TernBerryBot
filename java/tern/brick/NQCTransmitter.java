@@ -19,6 +19,7 @@
  */
 package tern.brick;
 
+import tern.Logger;
 import tern.compiler.CompileException;
 import java.util.Properties;
 
@@ -39,7 +40,8 @@ public class NQCTransmitter extends Transmitter{
 	private String port;
 
 
-	public NQCTransmitter(Properties props) {
+	public NQCTransmitter(Properties props, Logger logger) {
+		this.log = logger;
 		this.firmware = props.getProperty("brick.firmware");
 		this.compiler = props.getProperty("brick.compiler");
 		this.port     = props.getProperty("brick.port");
@@ -70,6 +72,7 @@ public class NQCTransmitter extends Transmitter{
 
 
 	private void generateError(String err) throws CompileException {
+		log.log("[W] Compiler ended with errors:\n"+err);
 		if (err.indexOf("No reply from RCX") >= 0) {
 			throw new CompileException(CompileException.ERR_NO_LEGO_BRICK);
 		}

@@ -4,6 +4,7 @@
  */
 package tern.brick;
 
+import tern.Logger;
 import tern.compiler.CompileException;
 import java.util.Properties;
 
@@ -16,7 +17,8 @@ public class NXCTransmitter extends Transmitter{
     private String Path;
 
 	
-	public NXCTransmitter(Properties props) {
+	public NXCTransmitter(Properties props, Logger logger) {
+		this.log = logger;
 		this.compiler = props.getProperty("nxc.compiler");
 		this.process  = null;
 		this.Path = props.getProperty("nxc.path");
@@ -39,6 +41,7 @@ public class NXCTransmitter extends Transmitter{
 
 
 	private void generateError(String err) throws CompileException {
+		log.log("[W] Compiler ended with errors:\n"+err);
 		if (err.indexOf("Download failed") >= 0) {
 			throw new CompileException(CompileException.ERR_NO_LEGO_BRICK);
 		}
