@@ -219,11 +219,11 @@ public class Start extends PStatement implements StartStatement {
 
       program.addInstruction("//-----------------------------------");
       program.addInstruction("subcall Sing {");
-      program.addInstruction("   SOUND(PLAY,SOUND_VOLUME,up.rsf)");
+      program.addInstruction("   SOUND(PLAY,SOUND_VOLUME,'up.rsf')");
       program.addInstruction("   SOUND_READY");
-      program.addInstruction("   SOUND(PLAY,SOUND_VOLUME,down.rsf)");
+      program.addInstruction("   SOUND(PLAY,SOUND_VOLUME,'down.rsf')");
       program.addInstruction("   SOUND_READY");
-      program.addInstruction("   SOUND(PLAY,SOUND_VOLUME,up.rsf)");
+      program.addInstruction("   SOUND(PLAY,SOUND_VOLUME,'up.rsf')");
       program.addInstruction("   SOUND_READY");
       program.addInstruction("}");
 
