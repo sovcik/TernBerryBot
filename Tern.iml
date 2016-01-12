@@ -4,13 +4,12 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/sounds" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/images" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/lib" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/resources" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/cpp" />
       <excludeFolder url="file://$MODULE_DIR$/demo-img" />
       <excludeFolder url="file://$MODULE_DIR$/docs" />
+      <excludeFolder url="file://$MODULE_DIR$/lib" />
       <excludeFolder url="file://$MODULE_DIR$/lmsasm" />
       <excludeFolder url="file://$MODULE_DIR$/logs" />
       <excludeFolder url="file://$MODULE_DIR$/nqc" />
@@ -19,7 +18,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library" scope="RUNTIME">
+    <orderEntry type="module-library">
       <library>
         <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
@@ -32,7 +31,5 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="ev3j-0.1.1" level="project" />
-    <orderEntry type="library" name="bluecove-2.1.1-SNAPSHOT-63" level="project" />
   </component>
 </module>
