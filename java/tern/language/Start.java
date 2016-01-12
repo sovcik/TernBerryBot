@@ -176,7 +176,7 @@ public class Start extends PStatement implements StartStatement {
       program.addInstruction("     TIMER_READY(timer)");
       program.addInstruction("     ADD8 (1,i,i)");
       program.addInstruction("   JR_LT8(i,10,shake_loop)");
-      program.addInstruction("   OUTPUT_STOP(LAYER, MOTOR_BOTH)");
+      program.addInstruction("   OUTPUT_STOP(LAYER, MOTOR_BOTH, BRAKE_STOP)");
       program.addInstruction("}");
 
       program.addInstruction("//-----------------------------------");
@@ -194,7 +194,7 @@ public class Start extends PStatement implements StartStatement {
       program.addInstruction("     TIMER_READY(timer)");
       program.addInstruction("     ADD8 (1,i,i)");
       program.addInstruction("   JR_LT8(i,4,shuffle_loop)");
-      program.addInstruction("   OUTPUT_STOP(LAYER, MOTOR_BOTH)");
+      program.addInstruction("   OUTPUT_STOP(LAYER, MOTOR_BOTH, BRAKE_STOP)");
       program.addInstruction("}");
 
       program.addInstruction("//-----------------------------------");
@@ -214,7 +214,7 @@ public class Start extends PStatement implements StartStatement {
       program.addInstruction("     TIMER_READY(timer)");
       program.addInstruction("     ADD8 (1,i,i)");
       program.addInstruction("   JR_LT8(i,5,wiggle_loop)");
-      program.addInstruction("   OUTPUT_STOP(LAYER, MOTOR_BOTH)");
+      program.addInstruction("   OUTPUT_STOP(LAYER, MOTOR_BOTH, BRAKE_STOP)");
       program.addInstruction("}");
 
       program.addInstruction("//-----------------------------------");
