@@ -45,17 +45,14 @@ public class Palette {
 	public static BufferedImage CAMERA_ON = createImage("/images/camera_on.png");
 	public static BufferedImage CAMERA_OFF = createImage("/images/camera_off.png");
 	//public static BufferedImage RCX_SMALL = createImage("/images/nxtBrick_small.png");
-        public static BufferedImage NXT_SMALL=createImage("/images/nxtBrick_small.png");
+	public static BufferedImage NXT_SMALL = createImage("/images/nxtBrick_small.png");
 	public static BufferedImage PLAY_UP = createImage("/images/play_button_up.png");
 	public static BufferedImage PLAY_DN = createImage("/images/play_button_dn.png");
 	public static BufferedImage ICON_LG = createImage("/images/icon.png");
 
-	public static BufferedImage ERR_NO_RCX =
-		createImage("/images/error_rcx.png");
-	public static BufferedImage ERR_NO_TOWER =
-		createImage("/images/error_tower.png");
-	public static BufferedImage ERR_NO_BEGIN =
-		createImage("/images/error_begin.png");
+	public static BufferedImage ERR_NO_RCX = createImage("/images/error_rcx.png");
+	public static BufferedImage ERR_NO_TOWER = createImage("/images/error_tower.png");
+	public static BufferedImage ERR_NO_BEGIN = createImage("/images/error_begin.png");
 
 	/**
 	 * Returns an audio clip, or null if the path was invalid.

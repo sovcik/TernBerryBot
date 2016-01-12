@@ -66,17 +66,21 @@ public class Wait extends PStatement {
 		// Wait for sensor if the next symbol is a sensor
 	   	if (next != null && next instanceof Sensor) {
 			program.addInstruction("wait_for_sensor_"+waitLoop+":");
+			program.codeIndent(); // indent opcodes inside loop
 			a = ((Sensor) next).getTest("wait_for_sensor_"+waitLoop);
 			while (i < a.size()) {
 				program.addInstruction(a.get(i));
 				i++;
 			}
+			program.codeOutdent(); // end of loop
 	   	}
 		// Wait specific time if the next symbol is a number
 	   	else if (next != null && next instanceof Num) {
 		   	int d = ((Num)next).getValue() * 100;
 		   	program.addInstruction("CALL(Wait," + d + ")");
 	   	}
+
+
 
 		if (this.next != null) next.compile(program);
 	}
