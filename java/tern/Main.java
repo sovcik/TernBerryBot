@@ -40,7 +40,6 @@ import javax.swing.Timer;
 import tern.ui.*;
 import tern.brick.*;
 import tern.compiler.*;
-import tern.language.*;
 import webcam.*;
 import topcodes.*;
 
@@ -149,27 +148,10 @@ WindowListener
 		//--------------------------------------------------
 		// Register statements for the compiler
 		//--------------------------------------------------
-		{
-			Backward.register();
-			Beep.register();
-			End.register();
-			Forward.register();
-			Go.register();
-			Growl.register();
-			Left.register();
-			Num.register();
-			Repeat.register();
-			Right.register();
-			Sensor.register();
-			Shake.register();
-			Shuffle.register();
-			Song.register();
-			Spin.register();
-			Start.register();
-			Stop.register();
-			Wait.register();
-			Whistle.register();
-			Wiggle.register();
+		if (this.props.getProperty("brick.language").equals("nqc")) {
+			tern.language.nqc.Language.registerStatements();
+		} else {
+			tern.language.ev3asm.Language.registerStatements();
 		}
 
 
@@ -438,9 +420,6 @@ WindowListener
 			progress.setMessage("Compiling...");
 			progress.setVisible(true);
 			animator.start();
-			
-			Repeat.NEST = 0;
-			Repeat.VAR = 0;
 		 
 			//-------------------------------------------------
 			// If the camera is connected, compile a picture from the webcam
