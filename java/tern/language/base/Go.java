@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
-public class Go extends PStatement {
-
+public abstract class Go extends tern.language.PStatement {
 
    public static final int FWD_A = 211;
    public static final int REV_A = 229;
@@ -39,64 +37,12 @@ public class Go extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Go(new TopCode(FWD_A)));
-      StatementFactory.registerStatementType(
-         new Go(new TopCode(REV_A)));
-      StatementFactory.registerStatementType(
-         new Go(new TopCode(FWD_B)));
-      StatementFactory.registerStatementType(
-         new Go(new TopCode(REV_B)));
-      StatementFactory.registerStatementType(
-         new Go(new TopCode(FWD_C)));
-      StatementFactory.registerStatementType(
-         new Go(new TopCode(REV_C)));
-   }
-
-
-   public int getCode() {
-      return top.getCode();
-   }
-
-
    public String getName() {
       return ("GO");
    }
 
    
-   public Statement newInstance(TopCode top) {
-      return new Go(top);
-   }
-
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      switch (top.getCode()) {
-      case FWD_A:
-         program.addInstruction("CALL(StartMotor, MOTOR_A, MOTOR_SPEED)");
-         break;
-      case REV_A:
-         program.addInstruction("CALL(StartMotor, MOTOR_A, MOTOR_NEGATIVE_SPEED)");
-         break;
-      case FWD_B:
-         program.addInstruction("CALL(StartMotor, MOTOR_B, MOTOR_SPEED)");
-         break;
-      case REV_B:
-         program.addInstruction("CALL(StartMotor, MOTOR_B, MOTOR_NEGATIVE_SPEED)");
-         break;
-      case FWD_C:
-         program.addInstruction("CALL(StartMotor, MOTOR_C, MOTOR_SPEED)");
-         break;
-      case REV_C:
-         program.addInstruction("CALL(StartMotor, MOTOR_C, MOTOR_NEGATIVE_SPEED)");
-         break;
-      }
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
       switch (top.getCode()) {
       case FWD_A: out.println("   <go param='fwd_a' />"); break;
       case REV_A: out.println("   <go param='rev_a' />"); break;

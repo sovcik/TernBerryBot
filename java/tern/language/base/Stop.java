@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Stop extends PStatement {
+public abstract class Stop extends tern.language.PStatement {
 
 
    public static final int STOP_A = 103;
@@ -49,16 +48,6 @@ public class Stop extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Stop(new TopCode(STOP_A)));
-      StatementFactory.registerStatementType(
-         new Stop(new TopCode(STOP_B)));
-      StatementFactory.registerStatementType(
-         new Stop(new TopCode(STOP_C)));
-   }
-
-
    public int getCode() {
       return top.getCode();
    }
@@ -68,24 +57,12 @@ public class Stop extends PStatement {
       return ("STOP " + motor);
    }
 
-   
-   public Statement newInstance(TopCode top) {
-      return new Stop(top);
-   }
 
-	
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("Off(OUT_" + motor + ");");
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
-		switch (top.getCode()) {
-		case STOP_A:  out.println("   <stop param='a' />");
-		case STOP_B:  out.println("   <light param='off' />");
-		case STOP_C:  out.println("   <stop param='c' />");
+   public void toXML(java.io.PrintWriter out) {
+	  switch (top.getCode()) {
+		 case STOP_A:  out.println("   <stop param='a' />");
+		 case STOP_B:  out.println("   <light param='off' />");
+		 case STOP_C:  out.println("   <stop param='c' />");
       }
-	}
+   }
 }

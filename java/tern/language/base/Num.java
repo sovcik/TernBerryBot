@@ -17,12 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
-public class Num extends PStatement {
+public abstract class Num extends tern.language.PStatement {
 
    public static final int CODE_2 = 203;
    public static final int CODE_3 = 339;
@@ -35,31 +34,10 @@ public class Num extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Num(new TopCode(CODE_2)));
-      StatementFactory.registerStatementType(
-         new Num(new TopCode(CODE_3)));
-      StatementFactory.registerStatementType(
-         new Num(new TopCode(CODE_4)));
-      StatementFactory.registerStatementType(
-         new Num(new TopCode(CODE_5)));
-   }
-
-
-   public int getCode() {
-      return top.getCode();
-   }
-
-
    public String getName() {
       return "NUMBER";
    }
 
-   
-   public Statement newInstance(TopCode top) {
-      return new Num(top);
-   }
 
    public int getValue() {
       switch (getCode()) {
@@ -69,12 +47,6 @@ public class Num extends PStatement {
       case CODE_5: return 5;
       default: return 0;
       }
-   }
-
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      if (this.next != null) next.compile(program);
    }
 
 

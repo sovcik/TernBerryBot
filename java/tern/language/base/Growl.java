@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
 import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Growl extends PStatement {
+public abstract class Growl extends tern.language.PStatement {
 
    public static final int CODE = 307;
 
@@ -33,35 +33,12 @@ public class Growl extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Growl(new TopCode(CODE)));
-   }
-
-
-   public int getCode() {
-      return CODE;
-   }
-
-
    public String getName() {
       return "GROWL";
    }
 
 
-   public Statement newInstance(TopCode top) {
-      return new Growl(top);
-   }
-
-	
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Growl)");
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <growl />");
 	}
 }

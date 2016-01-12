@@ -18,49 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Beep extends PStatement {
+public abstract class Beep extends tern.language.PStatement {
 
-   public static final int CODE = 661;
+    public static final int CODE = 661;
 
-
-   public Beep(TopCode top) {
+    public Beep(TopCode top) {
       super(top);
    }
-
-
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Beep(new TopCode(CODE)));
-   }
-
 
 	public String getName() {
 		return "BEEP";
 	}
-
-
-	public int getCode() {
-		return CODE;
-	}
-
-
-   public Statement newInstance(TopCode top) {
-      return new Beep(top);
-   }
-
-	
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Beep)");
-      if (this.next != null) next.compile(program);
-   }
-
 
 	public void toXML(java.io.PrintWriter out) {
 		out.println("   <beep />");

@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Song extends PStatement {
+public abstract class Song extends tern.language.PStatement {
 
 
    public static final int CODE = 397;
@@ -34,35 +33,12 @@ public class Song extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Song(new TopCode(CODE)));
-   }
-
-
-   public int getCode() {
-      return CODE;
-   }
-
-
    public String getName() {
       return "SING";
    }
 
 
-   public Statement newInstance(TopCode top) {
-      return new Song(top);
-   }
-
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Sing)");
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <sing />");
 	}
 }

@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
-import java.util.ArrayList;
 
-
-public class Wait extends PStatement {
+public abstract class Wait extends tern.language.PStatement {
 
 	public static final int CODE = 611;
 	public static int waitLoop = 0;
@@ -36,53 +33,8 @@ public class Wait extends PStatement {
 	}
 
 
-	public static void register() {
-      StatementFactory.registerStatementType(new Wait(new TopCode(CODE)));
-	}
-
-
-	public int getCode() {
-		return Wait.CODE;
-	}
-
-
 	public String getName() {
 		return ("WAIT");
-	}
-
-   
-	public Statement newInstance(TopCode top) {
-		return new Wait(top);
-	}
-
-
-	public void compile(Program program) throws CompileException {
-		ArrayList<String> a;
-		int i = 0;
-
-		waitLoop++;
-	   	setDebugInfo(program);
-
-		// Wait for sensor if the next symbol is a sensor
-	   	if (next != null && next instanceof Sensor) {
-			program.addInstruction("wait_for_sensor_"+waitLoop+":");
-			program.codeIndent(); // indent opcodes inside loop
-			a = ((Sensor) next).getTest("wait_for_sensor_"+waitLoop);
-			while (i < a.size()) {
-				program.addInstruction(a.get(i));
-				i++;
-			}
-			program.codeOutdent(); // end of loop
-	   	}
-		// Wait specific time if the next symbol is a number
-	   	else if (next != null && next instanceof Num) {
-		   	int d = ((Num)next).getValue() * 100;
-		   	program.addInstruction("CALL(Wait," + d + ")");
-	   	}
-
-
-
-		if (this.next != null) next.compile(program);
 	}
 
 

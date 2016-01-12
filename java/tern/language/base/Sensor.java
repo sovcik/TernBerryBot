@@ -20,15 +20,12 @@
  * 
  * Modified by Mariam Hussien - Oct,2011
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
-import java.util.ArrayList;
 
-
-public class Sensor extends PStatement {
+public abstract class Sensor extends tern.language.PStatement {
 	
 	public static final int PRESS   = 419;
 	public static final int RELEASE = 425;
@@ -39,20 +36,6 @@ public class Sensor extends PStatement {
 	
 	public Sensor(TopCode top) {
 		super(top);
-	}
-	
-	
-	public static void register() {
-		StatementFactory.registerStatementType(
-			new Sensor(new TopCode(PRESS)));
-		StatementFactory.registerStatementType(
-			new Sensor(new TopCode(RELEASE)));
-		StatementFactory.registerStatementType(
-			new Sensor(new TopCode(LIGHT)));
-		StatementFactory.registerStatementType(
-			new Sensor(new TopCode(DARK)));
-		StatementFactory.registerStatementType(
-			new Sensor(new TopCode(OBJECT)));
 	}
 	
 	
@@ -78,52 +61,7 @@ public class Sensor extends PStatement {
                     
 		}
 	}
-	
-	
-	public Statement newInstance(TopCode top) {
-		return new Sensor(top);
-	}
-	
-	
-	public ArrayList<String> getTest(String label) {
-		ArrayList<String> a = new ArrayList();
 
-		// INPUT_READ(layer,port,sensor_type,sensor_mode,variable)
-		switch (top.getCode()) {
-		case PRESS:
-			a.add("INPUT_READ(LAYER, PORT_TOUCH, SEN_TYPE_TOUCH, SEN_MODE_TOUCH_TOUCH, senTouch)");
-			a.add("JR_EQ8(senTouch, 1, "+label+")");
-			break;
-		case RELEASE:
-			a.add("INPUT_READ(LAYER, PORT_TOUCH, SEN_TYPE_TOUCH, SEN_MODE_TOUCH_TOUCH, senTouch)");
-			a.add("JR_EQ8(senTouch, 0, "+label+")");
-			break;
-		case DARK:
-			a.add("INPUT_READ(LAYER, PORT_LIGHT, SEN_TYPE_LIGHT, SEN_MODE_LIGHT_REFLECTED, senLight)");
-			a.add("JR_GT8(senLight, 42, "+label+")");
-			break;
-		case LIGHT:
-			a.add("INPUT_READ(LAYER, PORT_LIGHT, SEN_TYPE_LIGHT, SEN_MODE_LIGHT_REFLECTED, senLight)");
-			a.add("JR_LTEQ8(senLight, 42, "+label+")");
-			break;
-		case OBJECT:
-			a.add("INPUT_READ(LAYER, PORT_ULTRASONIC, SEN_TYPE_ULTRASONIC, SEN_MODE_ULTRASONIC_CM, senUltrasonic)");
-			a.add("JR_LTEQ8(senUltrasonic, 15, "+label+")");
-			break;
-		default:
-			a.add("JR("+label+")");
-		}
-
-		return a;
-	}
-
-
-	public void compile(Program program) throws CompileException {
-		setDebugInfo(program);
-		if (this.next != null) next.compile(program);
-	}
-	
-	
 	public void toXML(java.io.PrintWriter out) {
 		switch (top.getCode()) {
 		case PRESS:   out.println("   <until-push />"); break;

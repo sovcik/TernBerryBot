@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
 import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class End extends PStatement {
+public abstract class End extends tern.language.PStatement {
 
    public static final int CODE = 369;
 
@@ -39,34 +39,12 @@ public class End extends PStatement {
    }
    
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new End(new TopCode(CODE)));
-   }
-
-
-   public int getCode() {
-      return CODE;
-   }
-
-
    public String getName() {
       return "END";
    }
 
    
-   public Statement newInstance(TopCode top) {
-      return new End(top);
-   }
-
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("// END");
-   }
-
-	
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <end />");
 	}
 }

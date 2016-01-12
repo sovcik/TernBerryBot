@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Forward extends PStatement {
+public abstract class Forward extends tern.language.PStatement {
 
    public static final int CODE = 405;
 
@@ -33,36 +32,13 @@ public class Forward extends PStatement {
       super(top);
    }
 
-
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Forward(new TopCode(CODE)));
-   }
-
    
    public String getName() {
       return "FORWARD";
    }
 
 
-   public Statement newInstance(TopCode top) {
-      return new Forward(top);
-   }
-
-
-   public int getCode() {
-      return CODE;
-   }
-
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Forward)");
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <forward />");
 	}
 }

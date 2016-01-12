@@ -31,11 +31,21 @@ import topcodes.*;
  */
 public abstract class PStatement extends Statement {
 
+   public static final int CODE = 999;
 
    public PStatement(TopCode top) {
       super(top);
    }
 
+   abstract public Statement newInstance(TopCode top);
+
+   public static void register() {}
+
+   abstract public String getName();
+
+   public int getCode() {
+      return top.getCode();
+   }
 
    public void registerConnections(ConnectionMap map) {
       map.addConnector(this, "next", 2.9, 0);
@@ -48,4 +58,8 @@ public abstract class PStatement extends Statement {
       program.expandBoundingBox(top.getCenterX(), top.getCenterY());
       program.addCompiledStatement(this);
    }
+
+   abstract public void compile(Program program) throws CompileException;
+
+   abstract public void toXML(java.io.PrintWriter out);
 }

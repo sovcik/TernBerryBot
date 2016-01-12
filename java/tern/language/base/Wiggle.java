@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Wiggle extends PStatement {
+public abstract class Wiggle extends tern.language.PStatement {
 
 
    public static final int CODE = 155;
@@ -34,35 +33,12 @@ public class Wiggle extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Wiggle(new TopCode(CODE)));
-   }
-
-
-   public int getCode() {
-      return CODE;
-   }
-
-
    public String getName() {
       return "WIGGLE";
    }
 
-   
-   public Statement newInstance(TopCode top) {
-      return new Wiggle(top);
-   }
 
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Wiggle)");
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <wiggle />");
 	}
 }

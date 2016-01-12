@@ -17,13 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
-import tern.compiler.*;
 import topcodes.TopCode;
 
 
-public class Spin extends PStatement {
+public abstract class Spin extends tern.language.PStatement {
 
    public static final int CODE = 331;
 
@@ -33,35 +32,10 @@ public class Spin extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Spin(new TopCode(CODE)));
-   }
+   public String getName() { return "SPIN";  }
 
 
-   public int getCode() {
-      return CODE;
-   }
-
-
-   public String getName() {
-      return "SPIN";
-   }
-
-
-   public Statement newInstance(TopCode top) {
-      return new Spin(top);
-   }
-
-	
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Spin)");
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <spin />");
 	}
 

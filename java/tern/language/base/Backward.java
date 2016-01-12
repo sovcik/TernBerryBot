@@ -20,12 +20,10 @@
  */
 package tern.language.base;
 
-import tern.compiler.*;
-import tern.language.PStatement;
 import topcodes.TopCode;
 
 
-public class Backward extends PStatement {
+public abstract class Backward extends tern.language.PStatement {
 
    public static final int CODE = 185;
    
@@ -35,36 +33,12 @@ public class Backward extends PStatement {
    }
 
 
-   public static void register() {
-      StatementFactory.registerStatementType(
-         new Backward(new TopCode(CODE)));
-   }
-
-   
    public String getName() {
       return "BACKWARD";
    }
 
 
-   public Statement newInstance(TopCode top) {
-      return new Backward(top);
-   }
-
-
-   public int getCode() {
-      return CODE;
-   }
-
-
-   public void compile(Program program) throws CompileException {
-      setDebugInfo(program);
-      program.addInstruction("CALL(Backward)");
-      
-      if (this.next != null) next.compile(program);
-   }
-
-
-	public void toXML(java.io.PrintWriter out) {
+   public void toXML(java.io.PrintWriter out) {
 		out.println("   <backward />");
 	}
 }
