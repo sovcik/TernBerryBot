@@ -20,13 +20,9 @@
 package tern.ui;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.io.IOException;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
