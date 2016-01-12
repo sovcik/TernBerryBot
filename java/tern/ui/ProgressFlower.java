@@ -40,21 +40,20 @@ public class ProgressFlower {
 
 	protected static final int BORDER = 25;
 
-   /** Message to display below the flower */
-   protected String message;
+   	/** Message to display below the flower */
+   	protected String message;
 
-   /** Petal count */
-   protected int count;
+   	/** Petal count */
+   	protected int count;
 
-   /** Is the flower visible or not? */
-   protected boolean visible;
+   	/** Is the flower visible or not? */
+   	protected boolean visible;
 
 	protected BufferedImage[] frames;
 
-   
-/**
- * Default constructor
- */
+	/**
+ 	* Default constructor
+ 	*/
 	public ProgressFlower() {
 		this.message = "Compiling...";
 		this.count   = 0;
