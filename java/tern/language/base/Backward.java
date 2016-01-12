@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package tern.language;
+package tern.language.base;
 
 import tern.compiler.*;
+import tern.language.PStatement;
 import topcodes.TopCode;
 
 
@@ -58,6 +59,7 @@ public class Backward extends PStatement {
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
       program.addInstruction("CALL(Backward)");
+      
       if (this.next != null) next.compile(program);
    }
 
