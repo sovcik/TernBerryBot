@@ -148,9 +148,11 @@ WindowListener
 		//--------------------------------------------------
 		// Register statements for the compiler
 		//--------------------------------------------------
+		// Using Not-Quite-C?
 		if (this.props.getProperty("brick.language").equals("nqc")) {
 			tern.language.nqc.Language.registerStatements();
 		} else {
+			//Default is assembly language for Lego EV3
 			tern.language.ev3asm.Language.registerStatements();
 		}
 
