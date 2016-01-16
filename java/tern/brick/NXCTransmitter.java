@@ -40,15 +40,13 @@ public class NXCTransmitter extends Transmitter{
 	}
 
 
-	private void generateError(String err) throws CompileException {
-		log.log("[W] Compiler ended with errors:\n"+err);
-		if (err.indexOf("Download failed") >= 0) {
-			throw new CompileException(CompileException.ERR_NO_LEGO_BRICK);
-		}
-		
-		else {
-			System.out.println(err);
-			throw new CompileException(CompileException.ERR_UNKNOWN);
+	private void processOutput(int resultCode, String sOut, String sErr) throws CompileException {
+
+		if (sErr.contains("Download failed")) {
+			throw new CompileException(CompileException.ERR_NO_LEGO_BRICK, "Download to brick failed.");
+		} else {
+			System.out.println(sErr);
+			throw new CompileException(CompileException.ERR_UNKNOWN, sErr);
 		}
 	}
     

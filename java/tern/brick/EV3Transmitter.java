@@ -100,17 +100,16 @@ public class EV3Transmitter extends Transmitter {
     }
 
 
-    private void generateError(String err) throws CompileException {
+    private void processOutput(int resultCode, String sOut, String sErr) throws CompileException {
 
-        log.log("[W] Compiler ended with errors:\n"+err);
+        sErr = sErr + "\n" + sOut;
 
-        // TODO: analyze possible error messages - ignoring all for now
-        if (err.contains("argcount error")) {
-            //throw new CompileException(CompileException.ERR_TERN_LANG);
-        }
-        else {
-            System.out.println(err);
-            //throw new CompileException(CompileException.ERR_UNKNOWN);
+        if (sErr.contains("argcount error")) {
+            throw new CompileException(CompileException.ERR_TERN_LANG, "Internal error - wrong argument count");
+        } else if (sErr.contains("bad op")) {
+            throw new CompileException(CompileException.ERR_TERN_LANG, "Internal error - bad opcode");
+        } else if (sErr.contains("error")) {
+            throw new CompileException(CompileException.ERR_UNKNOWN, "Internal error - other error");
         }
     }
 

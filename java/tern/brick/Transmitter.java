@@ -118,9 +118,7 @@ public class Transmitter {
 
             log.log("[I] Compiler ended with status "+result);
             log.log("[I] Compiler output:\n"+sout+"\n"+serr);
-            if (result != 0 || (sout+serr).contains("error")) {
-                generateError(sout +"\n"+ serr);
-            }
+            processOutput(result, sout, serr);
         }
         catch (IOException e) {
             throw new CompileException(CompileException.ERR_NO_COMPILER,
@@ -135,12 +133,15 @@ public class Transmitter {
     }
 
 
-     private void generateError(String err) throws CompileException {
+    private void processOutput(int resultCode, String sOut, String sErr) throws CompileException {
         // This method should parse text output of external process
         // and throw relevant exception.
         // Generic implementation resolves all errors as UNKNOWN
-        log.log("[W] Compiler ended with errors.");
-        System.out.println(err);
-        throw new CompileException(CompileException.ERR_UNKNOWN);
+
+        if (resultCode > 0 || sErr.contains("error")) {
+            log.log("[W] Compiler ended with errors.");
+            System.out.println(sErr);
+            throw new CompileException(CompileException.ERR_UNKNOWN);
+        }
     }
 }
