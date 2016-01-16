@@ -1,0 +1,9 @@
+#
+# Definition of the main VM thread and definitions of global variables
+#
+
+vmthread main {
+
+    DATA8 senTouch // global register for touch sensor value
+    DATA8 senLight // global register for light sensor value
+    DATA8 senUltrasonic  // global register for ultrasonic sensor value

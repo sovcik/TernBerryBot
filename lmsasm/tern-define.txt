@@ -1,0 +1,60 @@
+#
+# Constants used by TernBerryBot in generated assembly files (LMS)
+#
+
+##########
+#  GENERAL CONSTANTS
+##########
+
+define LAYER        0
+
+define MOTOR_A      1
+define MOTOR_B      2
+define MOTOR_C      4
+define MOTOR_D      8
+define MOTOR_AB     3
+define MOTOR_BC     6
+
+define PORT_1       0
+define PORT_2       1
+define PORT_3       2
+define PORT_4       4
+
+define BRAKE_STOP   1
+define BRAKE_COAST  0
+
+##########
+#  ROBOT CONFIGURATION
+##########
+
+define SOUND_VOLUME  50
+
+define MOTOR_LEFT               MOTOR_B
+define MOTOR_RIGHT              MOTOR_C
+define MOTOR_BOTH               MOTOR_BC
+define MOTOR_SPEED              50      // forward speed
+define MOTOR_NEGATIVE_SPEED     -50     // backward speed
+define MOTOR_STEP	            1000    // length of a single "step"
+
+define PORT_TOUCH               PORT_1  // touch sensor connected to
+define PORT_LIGHT               PORT_2  // LIGHT SENSOR PORT
+define PORT_ULTRASONIC          PORT_3  // ULTRASONIC SENSOR PORT
+
+##########
+#  OTHER GENERAL CONSTANTS
+##########
+
+define SEN_TYPE_TOUCH           16      // EV3 TOUCH SENSOR
+define SEN_TYPE_LIGHT           29      // EV3 COLOR SENSOR
+define SEN_TYPE_ULTRASONIC      30      // EV3 ULTRASONIC SENSOR
+define SEN_TYPE_INFRARED        33      // EV3 INFRARED SENSOR
+define SEN_TYPE_GYRO            32      // EV3 GYRO SENSOR
+
+define SEN_MODE_TOUCH_TOUCH         0   // TOUCH MODE: TOUCH
+define SEN_MODE_LIGHT_REFLECTED     29  // COLOR MODE: REFLECTED
+define SEN_MODE_ULTRASONIC_CM       0   // ULTRASONIC MODE: CENTIMETERS
+define SEN_MODE_ULTRASONIC_INCH     1   // ULTRASONIC MODE: INCHES
+define SEN_MODE_ULTRASONIC_LISTEN   2   // ULTRASONIC MODE: LISTEN
+define SEN_MODE_INFRARED_PROXIMITY  0   // INFRARED MODE: PROXIMITY
+define SEN_MODE_INFRARED_SEEKER     1   // INFRARED MODE: SEEKER
+define SEN_MODE_GYRO_ANGLE          0   // GYRO MODE: ANGLE
