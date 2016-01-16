@@ -111,7 +111,7 @@ public class Repeat extends tern.language.base.Repeat {
 
 			// push instructions which should be added at the end of loop (after processing instructions inside loop)
 			a.add("    ADD32(1, " + var + "," + var + ")");
-			a.add("JR_LTE32(" + var + "," + param + "," + loopLabel + ")");
+			a.add("JR_LTEQ32(" + var + "," + param + "," + loopLabel + ")");
 			st.push(a);
 
 		}
