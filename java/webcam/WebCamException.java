@@ -31,4 +31,8 @@ public class WebCamException extends Exception {
    {
       super(message);
    }
+
+   public WebCamException(String message, Throwable t) {
+      super(message, t);
+   }
 }

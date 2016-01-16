@@ -21,6 +21,7 @@
 
 package webcam;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.io.File;
 
@@ -32,8 +33,8 @@ public class ExtCamApp extends WebCam {
     // the path to the external camera app executable.
     protected String appPath;
 
-    // app options
-    protected String appOptions;
+    // app commandline parameters
+    protected String appParams;
 
     // the file picture will be saved to
     protected String outFile;
@@ -50,12 +51,14 @@ public class ExtCamApp extends WebCam {
         appPath = props.getProperty("webcam.app","/opt/vc/bin/raspistill"); // including default path
         appTimeout = Integer.parseInt(props.getProperty("webcam.app.timeout", "5000")); // including default app timeout
         outFile = props.getProperty("webcam.app.outfile","tern-program.jpg"); // including default file name
-        appOptions = props.getProperty("webcam.app.options","-n -bm -t {webcam.app.timeout} -w {webcam.width} -h {webcam.height} -q 100 -e jpg -o {webcam.app.outfile}"); // including default app options
 
-        appOptions = appOptions.replace("{webcam.width}", Integer.toString(width));
-        appOptions = appOptions.replace("{webcam.height}", Integer.toString(height));
-        appOptions = appOptions.replace("{webcam.app.outfile}", outFile);
-        appOptions = appOptions.replace("{webcam.app.timeout}", Integer.toString(appTimeout));
+        appParams = props.getProperty("webcam.app.params","-n -bm -t {webcam.app.timeout} -w {webcam.width} -h {webcam.height} -q 100 -e jpg -o {webcam.app.outfile}"); // including default app options
+
+        // replace macros used in commadline params with real values
+        appParams = appParams.replace("{webcam.width}", Integer.toString(width));
+        appParams = appParams.replace("{webcam.height}", Integer.toString(height));
+        appParams = appParams.replace("{webcam.app.outfile}", outFile);
+        appParams = appParams.replace("{webcam.app.timeout}", Integer.toString(appTimeout));
 
     }
 
@@ -67,13 +70,14 @@ public class ExtCamApp extends WebCam {
             throw new WebCamException("External camera app does not exist.");
     }
 
-    public String getFileName() {
+    public String getImageFileName() throws WebCamException {
 
-        String cmd = "";
+        String[] pars = appParams.split(" ");
+        String[] cmd = new String[pars.length + 1];
+        cmd[0] = appPath;
+        System.arraycopy(pars, 0, cmd, 1, pars.length);
 
         try {
-
-            cmd = appPath + " " + appOptions;
 
             // Invoke external app to take the photo.
             Runtime.getRuntime().exec(cmd);
@@ -83,12 +87,16 @@ public class ExtCamApp extends WebCam {
 
             File f = new File(outFile);
             if(!f.exists() || f.isDirectory())
-                throw new Exception("Error: External app did not create any file. Expected: " + outFile);
+                throw new WebCamException("External app did not create any file. Expected: " + outFile);
 
         }
-        catch (Exception e) {
-            // Exit the application with the exception's hash code.
-            System.exit(e.hashCode());
+        catch (IOException e) {
+            // failed to execute external app
+            throw new WebCamException("Failed to execute external app: " + cmd.toString(), e);
+        }
+        catch (InterruptedException e) {
+            // failed to wait/sleep
+            throw new WebCamException("Failed to wait for external app to finish.", e);
         }
 
         return outFile;

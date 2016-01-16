@@ -429,7 +429,7 @@ WindowListener
 			if (webcam.isReady()) {
 				log("[I] Capturing image from webcam & compiling");
 				//TODO: for now sending file name instead of picture itself
-				this.program = compiler.compile(webcam.getFileName());
+				this.program = compiler.compile(webcam.getImageFileName());
 
 				//-------------------------------------------------
 				// Otherwise, let the user select a JPG file to compile

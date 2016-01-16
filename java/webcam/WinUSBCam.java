@@ -24,6 +24,7 @@ package webcam;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 
@@ -78,7 +79,7 @@ public class WinUSBCam extends WebCam {
         return image;
     }
 
-    public void saveFrameImage(String FileName)
+    public void saveFrameImage(String FileName) throws WebCamException
     {
         BufferedImage image =
                 new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -87,8 +88,8 @@ public class WinUSBCam extends WebCam {
         try{
             ImageIO.write(image, "png",f);
         }
-        catch (Exception ex){
-            System.out.print(ex);
+        catch (IOException e){
+            throw new WebCamException("Failed to save captured image to file "+FileName,e);
         }
     }
 

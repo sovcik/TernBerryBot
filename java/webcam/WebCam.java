@@ -46,8 +46,8 @@ public class WebCam {
    }
 
    // returns file name
-   public String getFileName() throws WebCamException {
-      return "foo.bar";
+   public String getImageFileName() throws WebCamException {
+      return "";
    }
 
 }
