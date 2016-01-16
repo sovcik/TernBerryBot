@@ -142,6 +142,12 @@ subcall StartMotor {
 }
 
 //-----------------------------------
+subcall StopMotor {
+    IO_8 motor
+    OUTPUT_STOP(LAYER, motor, BRAKE_STOP)
+}
+
+//-----------------------------------
 subcall Wait {
     IO_32 wait_time
     DATA32 timer

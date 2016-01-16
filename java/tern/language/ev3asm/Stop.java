@@ -45,7 +45,7 @@ public class Stop extends tern.language.base.Stop {
 
    public void compile(Program program) throws CompileException {
       setDebugInfo(program);
-      program.addInstruction("Off(OUT_" + motor + ");");
+      program.addInstruction("StopMotor(MOTOR_" + motor + ")");
       if (this.next != null) next.compile(program);
    }
 }
