@@ -31,6 +31,5 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="pi4j-1" level="project" />
   </component>
 </module>
