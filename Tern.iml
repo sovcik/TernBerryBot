@@ -21,6 +21,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/bluecove-2.1.1-SNAPSHOT-63" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+        <jarDirectory url="file://$MODULE_DIR$/lib/bluecove-2.1.1-SNAPSHOT-63" recursive="false" />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
           <root url="file://$MODULE_DIR$/lib" />
         </CLASSES>
         <JAVADOC />
@@ -31,6 +41,18 @@
         <jarDirectory url="file://$MODULE_DIR$/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="pi4j-1" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/pi4j-1.0/lib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/lib/pi4j-1.0/lib" />
+        </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/lib/pi4j-1.0/lib" recursive="false" />
+        <jarDirectory url="file://$MODULE_DIR$/lib/pi4j-1.0/lib" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

@@ -22,7 +22,23 @@ public class RaspiGPIOButton extends HWButton {
     protected Logger log;
 
 
-    public void RaspiGPIOButton(){
+    public RaspiGPIOButton(){
+
+        if (this.log == null)
+            log = new Logger();
+
+        init();
+    }
+
+    public RaspiGPIOButton(Logger log){
+        this.log = log;
+        init();
+    }
+
+    protected void init(){
+
+        log.log("Connecting to Raspberry Pi GPIO.");
+
         // create gpio controller
         controller = GpioFactory.getInstance();
 
@@ -30,21 +46,15 @@ public class RaspiGPIOButton extends HWButton {
         myButton = controller.provisionDigitalInputPin(RaspiPin.GPIO_02, PinPullResistance.PULL_DOWN);
 
         // create and register gpio pin listener
-        myButton.addListener(new RaspiGPIOButton() {
+        myButton.addListener(new GpioPinListenerDigital() {
             @Override
             public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
                 // display pin state on console
-                System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+                log.log(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
             }
 
         });
 
-
-    }
-
-    public void RaspiGPIOButton(Logger log){
-        this log = log;
-        log.log("Connecting to Raspberry Pi GPIO.");
     }
 
     public void disconnect(){

@@ -41,7 +41,7 @@ public class WebCam {
       webCamReady = false;
    }
 
-   public void uninitialize() throws WebCamException {
+   public void uninitialize(){
       webCamReady = false;
    }
 

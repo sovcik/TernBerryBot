@@ -37,6 +37,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import tern.hwbutton.HWButton;
+import tern.hwbutton.RaspiGPIOButton;
 import tern.ui.*;
 import tern.brick.*;
 import tern.compiler.*;
@@ -106,6 +108,9 @@ WindowListener
 	/** Action command (firmware or compile) */
 	protected int command;
 
+	/** Hardware button  */
+	protected HWButton button;
+
 	public Main() {
 		super(true);
 		Main.instance = this;
@@ -169,8 +174,26 @@ WindowListener
 			System.exit(1);
 		}
 
+		//--------------------------------------------------
+		// Initialize external button
+		//--------------------------------------------------
+		if (this.props.getProperty("app.button.type").equals("RaspiGPIO"))
+			this.button = new RaspiGPIOButton(logger);
+		else
+			this.button = new HWButton();
+
+
 		try {
-			this.brick = new EV3Transmitter(props, logger);
+			//--------------------------------------------------
+			// Register statements for the compiler
+			//--------------------------------------------------
+			// Using Not-Quite-C?
+			if (this.props.getProperty("brick.language").equals("nqc")) {
+				this.brick =  new NQCTransmitter(props, logger);
+			} else {
+				// else it is EV3 assembly language
+				this.brick = new EV3Transmitter(props, logger);
+			}
 		} catch (CompileException e) {
 			log(e);
 			log(e.getCause().toString());
@@ -357,6 +380,8 @@ WindowListener
 			case CompileException.ERR_UNKNOWN:
 				message = "Unknown compile error.";
 				break;
+			default:
+				message = "Error ("+error+").";
 			}
 
 			// Draw error box
@@ -705,10 +730,16 @@ WindowListener
 /*                          WINDOW EVENTS                         */
 /******************************************************************/
 	public void windowClosing(WindowEvent e) {
-		//this.webcam.uninitialize();
+
+		this.webcam.uninitialize();
+
+		button.disconnect();
+
 		this.logger.stop();
+
 		frame.setVisible(false);
 		frame.dispose();
+
 		System.exit(0);
 	}
 	public void windowActivated(WindowEvent e) { } 

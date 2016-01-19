@@ -34,7 +34,10 @@ public class Logger {
 	protected String logdir;
 	
 	protected String basedir;
-	
+
+	public Logger(){
+		this.log     = null;
+	}
 	
 	public Logger(String basedir) {
 		this.log     = null;
