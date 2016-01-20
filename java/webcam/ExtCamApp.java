@@ -49,16 +49,15 @@ public class ExtCamApp extends WebCam {
         height = Integer.parseInt(props.getProperty("webcam.height", "1944")); // including default height
 
         appPath = props.getProperty("webcam.app","/opt/vc/bin/raspistill"); // including default path
-        appTimeout = Integer.parseInt(props.getProperty("webcam.app.timeout", "5000")); // including default app timeout
+        appTimeout = Integer.parseInt(props.getProperty("webcam.app.timeout", "1000")); // including default app timeout
         outFile = props.getProperty("webcam.app.outfile","tern-program.jpg"); // including default file name
 
-        appParams = props.getProperty("webcam.app.params","-n -bm -t {webcam.app.timeout} -w {webcam.width} -h {webcam.height} -q 100 -e jpg -o {webcam.app.outfile}"); // including default app options
+        appParams = props.getProperty("webcam.app.params","-n -bm -t 200 -w {webcam.width} -h {webcam.height} -q 100 -e jpg -o {webcam.app.outfile}"); // including default app options
 
         // replace macros used in commadline params with real values
         appParams = appParams.replace("{webcam.width}", Integer.toString(width));
         appParams = appParams.replace("{webcam.height}", Integer.toString(height));
         appParams = appParams.replace("{webcam.app.outfile}", outFile);
-        appParams = appParams.replace("{webcam.app.timeout}", Integer.toString(appTimeout));
 
     }
 
@@ -67,7 +66,7 @@ public class ExtCamApp extends WebCam {
         if(f.exists() && !f.isDirectory())
             webCamReady = true;
         else
-            throw new WebCamException("External camera app does not exist.");
+            throw new WebCamException("Camera app not found: '"+appPath+"'");
     }
 
     public String getImageFileName() throws WebCamException {
@@ -77,16 +76,21 @@ public class ExtCamApp extends WebCam {
         cmd[0] = appPath;
         System.arraycopy(pars, 0, cmd, 1, pars.length);
 
+        File f = new File(outFile);
+
+        // any previous picture should be deleted
+        if (f.exists() && f.isFile())
+            f.delete();
+
         try {
 
             // Invoke external app to take the photo.
             Runtime.getRuntime().exec(cmd);
 
             // Pause to allow the camera time to take the photo.
-            // Plus some extra time for overhead
-            Thread.sleep(appTimeout+1000);
+            Thread.sleep(appTimeout);
 
-            File f = new File(outFile);
+            // In this moment new file containing image should be present
             if(!f.exists() || f.isDirectory())
                 throw new WebCamException("External app did not create any file. Expected: " + outFile);
 

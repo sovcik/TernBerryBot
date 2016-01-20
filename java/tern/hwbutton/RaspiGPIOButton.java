@@ -8,7 +8,6 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 import tern.Logger;
-import tern.Main;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -51,8 +50,8 @@ public class RaspiGPIOButton extends HWButton implements GpioPinListenerDigital{
 
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent event) {
         // display pin state on console
-        log.log(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
-        System.out.println(" --> GPIO PIN STATE CHANGE: " + event.getPin() + " = " + event.getState());
+        log.log("GPIO pin state change: " + event.getPin() + " = " + event.getState());
+
         if (listener != null)
             // send key press in specified component to specified key event listener
             listener.keyPressed(new KeyEvent(
@@ -68,6 +67,8 @@ public class RaspiGPIOButton extends HWButton implements GpioPinListenerDigital{
 
         log.log("Connecting to Raspberry Pi GPIO.");
         System.out.println("Connecting to Raspberry Pi GPIO.");
+
+        // TODO: add verification if running on Raspberry - if not then exit. Issue#22
 
         // create gpio controller
         controller = GpioFactory.getInstance();

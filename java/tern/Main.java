@@ -291,10 +291,21 @@ WindowListener
 		//----------------------------------------------------
 		java.awt.Shape oldc = g.getClip();
 		g.setClip(rect);
+		
 		if (program != null) {
 			BufferedImage image = program.getImage();
-			if (image != null)
+			if (image != null) {
+
+				// if too big to fit the screen, then resize to fit
+				double xScale = rect.getWidth() / image.getWidth();
+				double yScale = rect.getHeight() / image.getHeight();
+				double theScale = xScale > yScale ? xScale : yScale;
+				if (theScale < 1)
+					this.tform.setToScale(theScale, theScale);
+
+				// show image
 				g.drawRenderedImage(image, this.tform);
+			}
 		}
 
 
@@ -317,8 +328,8 @@ WindowListener
 
 
 		//----------------------------------------------------
-      // Status buttons
-      //----------------------------------------------------
+      	// Status buttons
+      	//----------------------------------------------------
 		int ix = w - BORDER - 20;
 		int iy = h - BORDER - 10;
 		BufferedImage icon;
@@ -359,7 +370,7 @@ WindowListener
 				icon = Palette.ERR_NO_BEGIN;
 				break;
 			case CompileException.ERR_CAMERA:
-				message = "Uh oh! Make sure the camera is plugged in.";
+				message = "Camera failed to take a picture.";
 				break;
 			case CompileException.ERR_NO_LEGO_BRICK:
 				message = "Uh oh! Make sure the Lego robot brick is turned on.";
@@ -475,33 +486,29 @@ WindowListener
 			//-------------------------------------------------
 			// Zoom in on the program
 			//-------------------------------------------------
-			if (this.program != null)
-				focus(program.getBounds());
+			focus(program.getBounds());
 			
-			
-			//-------------------------------------------------
-			// Save and log the program
-			//-------------------------------------------------
-			System.out.println(program);
-			program.save(progFileName);
-			log("[I] Program saved to "+progFileName);
-
 			//-------------------------------------------------
 			// Send the program to the brick
 			//-------------------------------------------------
 			if (program.hasStartStatement()) {
-				progress.setMessage("Sending program to brick...");
 
+				//-------------------------------------------------
+				// Save and log the program
+				//-------------------------------------------------
+				System.out.println(program);
+				program.save(progFileName);
+				log("[I] Program saved to "+progFileName);
+
+				progress.setMessage("Sending program to brick...");
+				log("[I] Sending program to brick");
 				brick.send(progFileName);
 
-			} else if (program.isEmpty()) {
-				setErrorCode(CompileException.ERR_NONE);
 			} else {
+				log("[I] Image does not contain STARTing block. No program created.");
 				setErrorCode(CompileException.ERR_NO_BEGIN);
 			}
 			
-			log("[I] Running program");
-			this.logger.log(program);
 		}
 		catch (IOException e) {
 			this.logger.log(e);
