@@ -178,7 +178,7 @@ WindowListener
 		// Initialize external button
 		//--------------------------------------------------
 		if (this.props.getProperty("app.button.type").equals("RaspiGPIO"))
-			this.button = new RaspiGPIOButton(logger);
+			this.button = new RaspiGPIOButton(logger, this, this);
 		else
 			this.button = new HWButton();
 
@@ -280,7 +280,7 @@ WindowListener
 		// Copyright
 		//----------------------------------------------------
 		g.setFont(Palette.FONT12);
-		String copy = "Copyright (c) 2009-2015 Michael S. Horn, Jozef Sovcik";
+		String copy = "Copyright (c) 2009-2016 Michael S. Horn, Jozef Sovcik";
 		int fw = g.getFontMetrics().stringWidth(copy);
 		g.setColor(Color.GRAY);
 		g.drawString(copy, w - fw - BORDER, h - 8);
@@ -475,7 +475,8 @@ WindowListener
 			//-------------------------------------------------
 			// Zoom in on the program
 			//-------------------------------------------------
-			focus(program.getBounds());
+			if (this.program != null)
+				focus(program.getBounds());
 			
 			
 			//-------------------------------------------------

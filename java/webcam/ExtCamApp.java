@@ -83,7 +83,8 @@ public class ExtCamApp extends WebCam {
             Runtime.getRuntime().exec(cmd);
 
             // Pause to allow the camera time to take the photo.
-            Thread.sleep(appTimeout);
+            // Plus some extra time for overhead
+            Thread.sleep(appTimeout+1000);
 
             File f = new File(outFile);
             if(!f.exists() || f.isDirectory())
