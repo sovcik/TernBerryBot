@@ -291,7 +291,7 @@ WindowListener
 		//----------------------------------------------------
 		java.awt.Shape oldc = g.getClip();
 		g.setClip(rect);
-		
+
 		if (program != null) {
 			BufferedImage image = program.getImage();
 			if (image != null) {
@@ -374,7 +374,7 @@ WindowListener
 				break;
 			case CompileException.ERR_NO_LEGO_BRICK:
 				message = "Uh oh! Make sure the Lego robot brick is turned on.";
-				icon = Palette.ERR_NO_RCX;
+				icon = Palette.ERR_NO_ROBOT_CONNECTION;
 				break;
 			case CompileException.ERR_NO_COMPILER:
 				message = "Compiler not found.";

@@ -120,7 +120,7 @@ public class EV3Transmitter extends Transmitter {
                 brick.connect(URL);
             }
         } catch (EV3DeviceException e) {
-            throw new CompileException(CompileException.ERR_BRICK_BT_FAILED, "Connection to brick failed.", e);
+            throw new CompileException(CompileException.ERR_NO_LEGO_BRICK, "Connection to brick failed.", e);
         }
     }
 
@@ -170,9 +170,9 @@ public class EV3Transmitter extends Transmitter {
                 }
             }
         } catch (BluetoothStateException e) {
-            new CompileException(CompileException.ERR_BRICK_BT_FAILED, "Bluetooth failed to initialize.", e);
+            new CompileException(CompileException.ERR_NO_LEGO_BRICK, "Bluetooth failed to initialize.", e);
         } catch (IOException e) {
-            new CompileException(CompileException.ERR_BRICK_BT_FAILED, "Failed reading bluetooth device name.", e);
+            new CompileException(CompileException.ERR_NO_LEGO_BRICK, "Failed reading bluetooth device name.", e);
         }
 
         return addr;
