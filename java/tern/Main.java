@@ -3,7 +3,7 @@
  * 
  * Tern Tangible Programming System
  * Copyright (C) 2009 Michael S. Horn
- * Portions Copyright (C) 2015 Jozef Sovcik
+ * Portions Copyright (C) 2015,2016 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,9 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -111,6 +113,10 @@ WindowListener
 	/** Hardware button  */
 	protected HWButton button;
 
+	/** Internationalization **/
+	Locale currentLocale;
+	ResourceBundle messages;
+
 	public Main() {
 		super(true);
 		Main.instance = this;
@@ -122,9 +128,16 @@ WindowListener
 			this.props = new Properties();
 			this.props.load(new java.io.FileInputStream("config.properties"));
 		} catch (IOException iox) {
-			System.err.println("Error: Failed to load 'config.properties'");
+			System.err.println(messages.getString("err.props.load.failed"));
 			System.exit(1);
 		}
+
+		//--------------------------------------------------
+		// Configure locales
+		//--------------------------------------------------
+		currentLocale = new Locale(this.props.getProperty("app.language"));
+
+		messages = ResourceBundle.getBundle("Messages", currentLocale);
 
 
 		//--------------------------------------------------
@@ -146,7 +159,7 @@ WindowListener
 			this.webcam = new WebCam(props);
 		} else {
 			log("Properties: unknown or undefined camera type");
-			System.err.println("Error: Properties - unknown or undefined camera type");
+			System.err.println(messages.getString("err.props.camera.unknown"));
 			System.exit(1);
 		}
 
@@ -172,7 +185,7 @@ WindowListener
 			this.webcam.initialize();
 		} catch (Exception e) {
 			log(e);
-			System.err.println("Error: Camera failed to initialize.");
+			System.err.println(messages.getString("err.camera.init.failed"));
 			System.exit(1);
 		}
 
@@ -199,7 +212,7 @@ WindowListener
 		} catch (CompileException e) {
 			log(e);
 			log(e.getCause().toString());
-			System.err.println("Error: Connection to Lego brick failed.");
+			System.err.println(messages.getString("err.brick.connection.failed"));
 			System.exit(1);
 		}
 
@@ -368,33 +381,33 @@ WindowListener
 			case CompileException.ERR_NO_BLOCKS:
 				break;
 			case CompileException.ERR_NO_BEGIN:
-				message = "Every program needs a Begin block.";
+				message = messages.getString("compile.err.begin.required");
 				icon = Palette.ERR_NO_BEGIN;
 				break;
 			case CompileException.ERR_CAMERA:
-				message = "Camera failed to take a picture.";
+				message = messages.getString("compile.err.camera.failed");
 				break;
 			case CompileException.ERR_NO_LEGO_BRICK:
-				message = "Uh oh! Make sure the Lego robot brick is turned on.";
+				message = messages.getString("compile.err.brick.notconnected");
 				icon = Palette.ERR_NO_ROBOT_CONNECTION;
 				break;
 			case CompileException.ERR_NO_COMPILER:
-				message = "Compiler not found.";
+				message = messages.getString("compile.err.compiler.notfound");
 				break;
 			case CompileException.ERR_SAVE_FILE:
-				message = "Error saving program file.";
+				message = messages.getString("compile.err.program.save.failed");
 				break;
 			case CompileException.ERR_LOAD_FILE:
-				message = "Error loading JPG image.";
+				message = messages.getString("compile.err.image.load.failed");
 				break;
 			case CompileException.ERR_TERN_LANG:
-				message = "Error in Tern language definitions.";
+				message = messages.getString("compile.err.tern.internal.language");
 				break;
 			case CompileException.ERR_UNKNOWN:
-				message = "Unknown compile error.";
+				message = messages.getString("compile.err.unknown");
 				break;
 			default:
-				message = "Error ("+error+").";
+				message = String.format(messages.getString("compile.err.other"),error);
 			}
 
 			// Draw error box
@@ -457,7 +470,7 @@ WindowListener
 			// Start the progress indicator
 			//-------------------------------------------------
 			log ("[I] Starting compile");
-			progress.setMessage("Compiling...");
+			progress.setMessage(messages.getString("compile.process.running"));
 			progress.setVisible(true);
 			animator.start();
 		 
@@ -502,7 +515,7 @@ WindowListener
 				program.save(progFileName);
 				log("[I] Program saved to "+progFileName);
 
-				progress.setMessage("Sending program to brick...");
+				progress.setMessage(messages.getString("compile.process.sendingToBrick"));
 				log("[I] Sending program to brick");
 				brick.send(progFileName);
 
