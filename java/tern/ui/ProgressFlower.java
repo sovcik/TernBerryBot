@@ -39,6 +39,8 @@ public class ProgressFlower {
 	protected static final int PETAL_COUNT = 12;
 
 	protected static final int BORDER = 25;
+	protected static final int PADDING = 25;
+
 
    	/** Message to display below the flower */
    	protected String message;
@@ -66,7 +68,7 @@ public class ProgressFlower {
 
 
 	public int getWidth() {
-		return BORDER * 2 + frames[0].getWidth();
+		return BORDER * 2 + PADDING * 2 + frames[0].getWidth();
 	}
 	
 	public int getHeight() {
@@ -108,7 +110,7 @@ public class ProgressFlower {
 		g.draw(rect);
 		g.setStroke(Palette.STROKE1);
 
-		g.drawImage(frames[count], x + BORDER, y + BORDER, null);
+		g.drawImage(frames[count], x + BORDER + PADDING, y + BORDER, null);
 		
 		g.setFont(new Font(null, Font.BOLD, 16));
 		int fw = g.getFontMetrics().stringWidth(message);
