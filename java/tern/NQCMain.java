@@ -44,7 +44,6 @@ import tern.language.base.Backward;
 import tern.ui.*;
 import tern.brick.*;
 import tern.compiler.*;
-import tern.language.*;
 import webcam.*;
 import topcodes.*;
 
@@ -357,7 +356,7 @@ WindowListener
 				break;
 			case CompileException.ERR_NO_LEGO_BRICK:
 				message = "Uh oh! Make sure the RCX is turned on.";
-				icon = Palette.ERR_NO_RCX;
+				icon = Palette.ERR_NO_ROBOT_CONNECTION;
 				break;
 			case CompileException.ERR_NO_TOWER:
 				message = "Uh oh! Make sure the Tower is plugged in.";

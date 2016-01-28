@@ -2,7 +2,8 @@
  * @(#) Palette.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Portions Copyright (C) 2016 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,15 +45,26 @@ public class Palette {
 	public static BufferedImage LOGO = createImage("/images/logo.png");
 	public static BufferedImage CAMERA_ON = createImage("/images/camera_on.png");
 	public static BufferedImage CAMERA_OFF = createImage("/images/camera_off.png");
-	//public static BufferedImage RCX_SMALL = createImage("/images/nxtBrick_small.png");
-	public static BufferedImage NXT_SMALL = createImage("/images/nxtBrick_small.png");
+
 	public static BufferedImage PLAY_UP = createImage("/images/play_button_up.png");
 	public static BufferedImage PLAY_DN = createImage("/images/play_button_dn.png");
 	public static BufferedImage ICON_LG = createImage("/images/icon.png");
 
-	public static BufferedImage ERR_NO_RCX = createImage("/images/error_rcx.png");
-	public static BufferedImage ERR_NO_TOWER = createImage("/images/error_tower.png");
+	public static BufferedImage ERR_NO_TOWER = createImage("/images/tower_error.png");
 	public static BufferedImage ERR_NO_BEGIN = createImage("/images/error_begin.png");
+
+	public static BufferedImage BRICK_SMALL  = createImage("/images/brick_rcx_small.png");
+	public static BufferedImage ERR_NO_ROBOT_CONNECTION = createImage("/images/brick_rcx_error.png");
+
+	public static void initialize(String type){
+		if (type.equals("EV3")) {
+			BRICK_SMALL = createImage("/images/brick_ev3_small.png");
+			ERR_NO_ROBOT_CONNECTION = createImage("/images/brick_ev3_error.png");
+		} else if (type.equals("NXT")) {
+			BRICK_SMALL = createImage("/images/brick_nxt_small.png");
+			ERR_NO_ROBOT_CONNECTION = createImage("/images/brick_nxt_error.png");
+		}
+	}
 
 	/**
 	 * Returns an audio clip, or null if the path was invalid.

@@ -156,9 +156,11 @@ WindowListener
 		// Using Not-Quite-C?
 		if (this.props.getProperty("brick.language").equals("nqc")) {
 			tern.language.nqc.Language.registerStatements();
+			Palette.initialize("NXT");
 		} else {
 			//Default is assembly language for Lego EV3
 			tern.language.ev3asm.Language.registerStatements();
+			Palette.initialize("EV3");
 		}
 
 
@@ -338,7 +340,7 @@ WindowListener
 		g.drawImage(icon, ix - icon.getWidth(), iy - icon.getHeight(), null);
 		ix -= icon.getWidth() + 20;
 
-		icon = Palette.NXT_SMALL;
+		icon = Palette.BRICK_SMALL;
 		g.drawImage(icon, ix - icon.getWidth(), iy - icon.getHeight() + 5, null);
 
 		icon = onPlayButton() ? Palette.PLAY_DN : Palette.PLAY_UP;
@@ -505,7 +507,7 @@ WindowListener
 				brick.send(progFileName);
 
 			} else {
-				log("[I] Image does not contain STARTing block. No program created.");
+				log("[I] Image does not contain BEGIN block. No program created.");
 				setErrorCode(CompileException.ERR_NO_BEGIN);
 			}
 			
