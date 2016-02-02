@@ -2,7 +2,8 @@
  * @(#) ProgressFlower.java
  * 
  * Tern Tangible Programming System
- * Copyright (C) 2009 Michael S. Horn 
+ * Copyright (C) 2009 Michael S. Horn
+ * Copyright (C) 2016 Jozef Sovcik
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +25,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ResourceBundle;
+
 import tern.Palette;
 
 
@@ -53,11 +56,14 @@ public class ProgressFlower {
 
 	protected BufferedImage[] frames;
 
+	protected ResourceBundleUTF8 messages;
+
 	/**
  	* Default constructor
  	*/
-	public ProgressFlower() {
-		this.message = "Compiling...";
+	public ProgressFlower(ResourceBundleUTF8 m) {
+		this.messages = m;
+		this.message = messages.getString("compile.process.running");
 		this.count   = 0;
 		this.visible = false;
 		this.frames  = new BufferedImage[PETAL_COUNT];

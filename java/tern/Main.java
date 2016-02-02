@@ -115,7 +115,7 @@ WindowListener
 
 	/** Internationalization **/
 	Locale currentLocale;
-	ResourceBundle messages;
+	ResourceBundleUTF8 messages;
 
 	public Main() {
 		super(true);
@@ -137,7 +137,7 @@ WindowListener
 		//--------------------------------------------------
 		currentLocale = new Locale(this.props.getProperty("app.language"));
 
-		messages = ResourceBundle.getBundle("Messages", currentLocale);
+		messages = new ResourceBundleUTF8("Messages", currentLocale);
 
 
 		//--------------------------------------------------
@@ -225,7 +225,7 @@ WindowListener
 
 		this.frame     = new JFrame("Tern Tangible Programming");
 		this.tform     = new AffineTransform();
-		this.progress  = new ProgressFlower();
+		this.progress  = new ProgressFlower(messages);
 
 		this.animator  = new Timer(300, this);
 
