@@ -1,5 +1,5 @@
 /*
- * @(#) EV3ASMTransmitter.java
+ * @(#) EV3Transmitter.java
  *
  * Tern Tangible Programming System
  * Copyright (C) 2009 Michael S. Horn
